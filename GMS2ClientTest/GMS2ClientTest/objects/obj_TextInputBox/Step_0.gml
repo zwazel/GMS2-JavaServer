@@ -4,7 +4,6 @@ if(ready) {
 		if(keyboard_check(vk_anykey) and string_length(text) < max_chars) { // check if any key has been pressed and if our length isnt the max
 			text = text+string(keyboard_string);
 			keyboard_string = "";
-			show_debug_message(text)
 		}
 
 		if(keyboard_check(vk_backspace) and !keyboard_check_pressed(vk_backspace) and delete_timer = delete_timer_max) {
