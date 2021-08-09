@@ -1,12 +1,13 @@
 /// @description
 textInputs = [];
 
-function addTextInputBox(_posX, _posY, _maxChars = 64, _placeHolder, _layer = "gui") {
+function addTextInputBox(_posX, _posY, _maxChars = 64, _placeHolder, _layer = "gui", _text = "") {
 	var newTextInputInstance = instance_create_layer(_posX, _posY, _layer, obj_TextInputBox);
 	newTextInputInstance.textInputManager = id;
 	with(newTextInputInstance) {
 		max_chars = _maxChars;
 		placeholder = _placeHolder;
+		text = _text;
 		ready = true;
 	}
 	array_push(textInputs, newTextInputInstance);

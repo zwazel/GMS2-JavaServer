@@ -13,3 +13,8 @@ ready = false;
 textLength = 0;
 textInputManager = noone;
 canClearString = false;
+
+function getText() {
+	show_debug_message("returning text = " + text);
+	return text;
+}
