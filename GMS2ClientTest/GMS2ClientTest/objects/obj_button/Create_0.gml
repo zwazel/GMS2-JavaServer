@@ -1,4 +1,6 @@
 /// @description
-ready = false;
 text = "";
+ready = false;
 owner = noone;
+borderXOffsetInactive = 8;
+borderYOffsetInactive = 16;
