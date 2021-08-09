@@ -18,7 +18,4 @@ if(ready) {
 	}
 	draw_set_alpha(1);
 	draw_text(x,y,text);
-	draw_text(x,y - 32, "text length px = " + string(textLength))
-	draw_text(x,y - 48, "text length chars = " + string(string_length(text)))
-	draw_text(x,y - 64, "active = " + string(active))
 }
