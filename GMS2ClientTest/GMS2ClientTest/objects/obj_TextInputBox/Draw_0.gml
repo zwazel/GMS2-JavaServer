@@ -2,7 +2,7 @@
 if(ready) {
 	draw_set_color(c_white);
 	if(text == "") {
-		textLength = string_width(placeholer);
+		textLength = string_width(placeholder);
 	} else if(string_width(text) >= textLength) {
 		textLength = string_width(text);	
 	}
@@ -14,9 +14,11 @@ if(ready) {
 	draw_set_valign(fa_middle);
 	if(text == "") {
 		draw_set_alpha(0.5);
-		draw_text(x,y,placeholer);
+		draw_text(x,y,placeholder);
 	}
 	draw_set_alpha(1);
 	draw_text(x,y,text);
-	draw_text(x,y - 32, textLength)
+	draw_text(x,y - 32, "text length px = " + string(textLength))
+	draw_text(x,y - 48, "text length chars = " + string(string_length(text)))
+	draw_text(x,y - 64, "active = " + string(active))
 }

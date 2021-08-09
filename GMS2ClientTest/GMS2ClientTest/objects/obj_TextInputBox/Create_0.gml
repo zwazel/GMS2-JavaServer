@@ -2,7 +2,7 @@
 delete_timer_max = 2;
 delete_timer = 0;
 text = "";
-placeholer = "";
+placeholder = "";
 max_chars = 64;
 active = false;
 borderXOffsetInactive = 8;
@@ -11,3 +11,5 @@ borderXOffsetActive = 12;
 borderYOffsetActive = 20;
 ready = false;
 textLength = 0;
+textInputManager = noone;
+canClearString = false;
