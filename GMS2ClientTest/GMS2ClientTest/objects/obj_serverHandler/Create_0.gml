@@ -2,6 +2,7 @@
 var inputManager = instance_create_layer(0,0,"controls", obj_textInputManager);
 ipInput = noone;
 portInput = noone;
+connectToServerButton = noone;
 
 with(inputManager) {
 	other.ipInput = addTextInputBox(room_width/2, room_height/2-32,128, "IP of Server", "gui", "127.0.0.1");

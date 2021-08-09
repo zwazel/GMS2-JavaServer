@@ -1,28 +1,65 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server {
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(6666);
-        Socket client = serverSocket.accept();
-        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-        out.println("hello gamemaker studio: "); //the clients receive this message
-        while (true) {
-            System.out.println("in while loop");//the server console prints this message
-            String string = in.readLine();//keeps stuck on this
-            //after client disconnect, all messages the client has sent are displayed in the console
-            System.out.println("reading string:" + string);
-            if (string == null) {
-                break;
+    private List<Client> clients;
+    private ServerSocketChannel socket;
+    private boolean running;
+
+    public Server(int port) {
+        this.clients = new ArrayList<Client>();
+        this.running = false;
+
+        System.out.print("Trying to Listen on Port : " + port + "...");
+        try {
+            // Success
+            ServerSocketChannel channel = ServerSocketChannel.open();
+            channel.socket().bind(new java.net.InetSocketAddress(port));
+            System.out.println("Success!");
+            channel.configureBlocking(false);
+            socket = channel;
+            running = true;
+        } catch (IOException e) {
+            // Failure
+            System.err.println("Failed!");
+            socket = null;
+            running = false;
+        }
+
+        // Server loop
+        while (running) {
+            try {
+                // Sleep the thread
+                Thread.sleep(1);
+                // Check for new connections
+                SocketChannel newChannel = socket.accept();
+
+                // If a connection is found, create a Client and add it to
+                // the client list
+                if (newChannel != null) {
+                    System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
+                    Client c = new Client(this, newChannel);
+                    Thread t = new Thread(c);
+                    t.start();
+                    clients.add(c);
+                }
+
+            } catch (InterruptedException | IOException e) {
+                e.printStackTrace();
             }
 
-            out.println("we have received this answer: " + string);
-            System.out.println("stopped");
         }
     }
+
+    public void removeClient(Client client) {
+        clients.remove(client);
+    }
+
+    public static void main(String... args) {
+        new Server(21337);
+    }
+
 }
