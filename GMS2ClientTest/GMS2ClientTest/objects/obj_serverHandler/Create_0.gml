@@ -17,3 +17,5 @@ with(button) {
 show_debug_message("button = " + string(button));
 show_debug_message("ipInput = " + string(ipInput));
 show_debug_message("portInput = " + string(portInput));
+show_debug_message("ipInputText = " + string(ipInput.text));
+show_debug_message("portInputText = " + string(portInput.text));
