@@ -13,7 +13,7 @@ function addTextInputBox(_posX, _posY, _maxChars = 64, _placeHolder, _layer = "g
 	array_push(textInputs, newTextInputInstance);
 	show_debug_message("textInputs = " + string(array_length(textInputs)));
 	show_debug_message("new text input instance = " + string(newTextInputInstance))
-	return newTextInputInstance;
+	return newTextInputInstance.id;
 }
 
 function checkIfCanClearString() {
