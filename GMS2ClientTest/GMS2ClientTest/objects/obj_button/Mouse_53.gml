@@ -5,7 +5,7 @@ if(ready) {
 		if(owner != noone) {
 			show_debug_message("PRESSED")
 			with(owner) {
-				
+				buttonPressed();
 			}
 		}
 	}
