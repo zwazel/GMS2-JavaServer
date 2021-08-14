@@ -27,8 +27,13 @@ function buttonPressed() {
 	socket = network_create_socket(network_socket_tcp);
 	var ip = ipInput.text; //"chat.trophonix.com";
 	var port = real(portInput.text);
-	network_connect_raw(socket, ip, port);
-
-	latency = 0;
-	alarm[0] = 30;    
+	var server = network_connect_raw(socket, ip, port);
+	if(server < 0 ) {
+		// not connected
+		show_debug_message("couldn't connect to the server!");
+	} else {
+		// connected
+		show_debug_message("connected");
+		alarm[0] = room_speed;    
+	}
 }
