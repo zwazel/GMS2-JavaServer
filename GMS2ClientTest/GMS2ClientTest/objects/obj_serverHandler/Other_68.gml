@@ -1,6 +1,4 @@
 /// @description
-
-
 var type = ds_map_read(async_load, "type");
 
 if (type == network_type_data) {
