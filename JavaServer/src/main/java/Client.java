@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
 
 public class Client implements Runnable {
@@ -32,18 +33,23 @@ public class Client implements Runnable {
             try {
                 buffer = ByteBuffer.allocate(1024);
                 channel.read(buffer);   // fill buffer from the input stream
-                // since your buffer in GameMaker is unsigned, let's prevent all that signed to unsigned nonsense by doing a
-                // bitmask
+
+                buffer.order(ByteOrder.LITTLE_ENDIAN);
+
                 buffer.position(0);
-                final int mid = buffer.get() & 0x000000FF;
+                final int mid = buffer.get();
                 System.out.println("mid = " + mid);
+                System.out.println("bufferPos = " + buffer.position());
                 switch (mid) {
                     case 0:
-                        long time = buffer.getLong();
+                        int time = buffer.getInt();
+                        System.out.println("time = " + time);
+                        System.out.println("bufferPos = " + buffer.position());
+
                         wBuffer.clear();
                         wBuffer.position(0);
                         wBuffer.put((byte) 0);
-                        wBuffer.putLong(time);
+                        wBuffer.putInt(time);
                         channel.write(wBuffer);
                         break;
                     default:
