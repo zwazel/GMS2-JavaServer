@@ -9,8 +9,6 @@ public class Client implements Runnable {
     private boolean connected = true;
     private Server server;
 
-    ByteBuffer wBuffer = ByteBuffer.allocate(1024);
-
     public Client(Server server, SocketChannel channel) {
         this.server = server;
         this.channel = channel;
@@ -30,24 +28,28 @@ public class Client implements Runnable {
 
             int bytesRead = 0;
             ByteBuffer buffer;
+            ByteBuffer wBuffer;
             try {
-                buffer = ByteBuffer.allocate(1024);
+                final int bufferSize = 1024;
+                buffer = ByteBuffer.allocate(bufferSize);
+                wBuffer = ByteBuffer.allocate(bufferSize);
                 channel.read(buffer);   // fill buffer from the input stream
 
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
 
                 buffer.position(0);
-                final int mid = buffer.get();
+                final byte mid = buffer.get();
                 System.out.println("mid = " + mid);
                 switch (mid) {
                     case 0:
                         int time = buffer.getInt();
                         System.out.println("time = " + time);
 
-                        wBuffer.clear();
                         wBuffer.position(0);
-                        wBuffer.put((byte) 0);
+                        wBuffer.put((byte) 1);
+                        System.out.println("buffer position = " + wBuffer.position());
                         wBuffer.putInt(time);
+                        wBuffer.order(ByteOrder.LITTLE_ENDIAN);
                         channel.write(wBuffer);
                         break;
                     default:
