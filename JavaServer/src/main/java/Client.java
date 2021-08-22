@@ -26,7 +26,6 @@ public class Client implements Runnable {
                 ex.printStackTrace();
             }
 
-            int bytesRead = 0;
             ByteBuffer buffer;
             ByteBuffer wBuffer;
             try {
