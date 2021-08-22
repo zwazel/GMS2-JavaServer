@@ -17,15 +17,10 @@ with(button) {
 	text = "Connect";
 	ready = true;
 }
-show_debug_message("button = " + string(button));
-show_debug_message("ipInput = " + string(ipInput));
-show_debug_message("portInput = " + string(portInput));
-show_debug_message("ipInputText = " + string(ipInput.text));
-show_debug_message("portInputText = " + string(portInput.text));
 
 function buttonPressed() {
 	socket = network_create_socket(network_socket_tcp);
-	var ip = ipInput.text; //"chat.trophonix.com";
+	var ip = ipInput.text;
 	var port = real(portInput.text);
 	var server = network_connect_raw(socket, ip, port);
 	if(server < 0 ) {

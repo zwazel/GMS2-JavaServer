@@ -17,6 +17,7 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("run, connected = " + connected);
         while (connected) {
             System.out.println("test");
 
@@ -33,7 +34,9 @@ public class Client implements Runnable {
                 channel.read(buffer);   // fill buffer from the input stream
                 // since your buffer in GameMaker is unsigned, let's prevent all that signed to unsigned nonsense by doing a
                 // bitmask
+                buffer.position(0);
                 final int mid = buffer.get() & 0x000000FF;
+                System.out.println("mid = " + mid);
                 switch (mid) {
                     case 0:
                         long time = buffer.getLong();
@@ -58,8 +61,6 @@ public class Client implements Runnable {
                     ex1.printStackTrace();
                 }
             }
-
         }
     }
-
 }
