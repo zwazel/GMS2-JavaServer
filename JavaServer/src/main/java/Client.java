@@ -39,12 +39,10 @@ public class Client implements Runnable {
                 buffer.position(0);
                 final int mid = buffer.get();
                 System.out.println("mid = " + mid);
-                System.out.println("bufferPos = " + buffer.position());
                 switch (mid) {
                     case 0:
                         int time = buffer.getInt();
                         System.out.println("time = " + time);
-                        System.out.println("bufferPos = " + buffer.position());
 
                         wBuffer.clear();
                         wBuffer.position(0);
