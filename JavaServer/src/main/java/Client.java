@@ -46,6 +46,9 @@ public class Client implements Runnable {
                         System.out.println("time = " + time);
                         System.out.println("bufferPos = " + buffer.position());
 
+                        float randomThing = buffer.getFloat();
+                        System.out.println("randomThing = " + randomThing);
+
                         wBuffer.clear();
                         wBuffer.position(0);
                         wBuffer.put((byte) 0);
