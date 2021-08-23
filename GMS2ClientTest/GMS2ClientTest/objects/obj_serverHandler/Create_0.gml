@@ -33,7 +33,7 @@ function buttonPressed(button) {
 			} else {
 				// connected
 				show_debug_message("connected");
-				//alarm[0] = room_speed;
+				alarm[0] = room_speed;
 		
 				with(button) {
 					instance_destroy();
@@ -60,9 +60,12 @@ function buttonPressed(button) {
 					var buffer = buffer_create(1024, buffer_fixed, 1);
 					buffer_seek(buffer, buffer_seek_start, 0);
 					buffer_write(buffer, buffer_s8, 2);
-					var username = usernameInput.text;
+					
+					var username = usernameInput.text
+					var usernameLength = string_length(username);
+					buffer_write(buffer, buffer_s32, usernameLength);
 					show_debug_message("username: " + username);
-					buffer_write(buffer, buffer_string, username + "\n");
+					buffer_write(buffer, buffer_string, username);
 
 					network_send_raw(socket, buffer, buffer_tell(buffer));
 			}
