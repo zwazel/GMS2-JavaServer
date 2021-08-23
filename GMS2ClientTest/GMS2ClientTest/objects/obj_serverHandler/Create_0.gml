@@ -1,7 +1,8 @@
 /// @description
-var inputManager = instance_create_layer(0,0,"controls", obj_textInputManager);
+inputManager = instance_create_layer(0,0,"controls", obj_textInputManager);
 ipInput = noone;
 portInput = noone;
+usernameInput = noone;
 latency = 0;
 global.buffer = buffer_create(1024, buffer_fixed, 1);
 socket = noone;
@@ -11,24 +12,60 @@ with(inputManager) {
 	other.portInput = addTextInputBox(room_width/2, room_height/2+32,32, "Port of Server", "gui", "21337");
 }
 
-var button = instance_create_layer(room_width/2, room_height/2+96,"gui", obj_button);
-button.owner = id;
-with(button) {
+currentButton = instance_create_layer(room_width/2, room_height/2+96,"gui", obj_button);
+with(currentButton) {
 	text = "Connect";
+	owner = other.id;
+	cmd = buttonCommands.connect_to_server;
 	ready = true;
 }
 
-function buttonPressed() {
-	socket = network_create_socket(network_socket_tcp);
-	var ip = ipInput.text;
-	var port = real(portInput.text);
-	var server = network_connect_raw(socket, ip, port);
-	if(server < 0 ) {
-		// not connected
-		show_debug_message("couldn't connect to the server!");
-	} else {
-		// connected
-		show_debug_message("connected");
-		alarm[0] = room_speed;    
+function buttonPressed(button) {
+	switch(button.cmd) {
+		case buttonCommands.connect_to_server:
+			socket = network_create_socket(network_socket_tcp);
+			var ip = ipInput.text;
+			var port = real(portInput.text);
+			var server = network_connect_raw(socket, ip, port);
+			if(server < 0 ) {
+				// not connected
+				show_debug_message("couldn't connect to the server!");
+			} else {
+				// connected
+				show_debug_message("connected");
+				//alarm[0] = room_speed;
+		
+				with(button) {
+					instance_destroy();
+				}
+		
+				with(inputManager) {
+					destroyAllInputs()
+					other.usernameInput = addTextInputBox(room_width/2, room_height/2-32,128, "Username");
+				}
+				
+				currentButton = instance_create_layer(room_width/2, room_height/2+96,"gui", obj_button);
+				with(currentButton) {
+					text = "Set Username";
+					cmd = buttonCommands.set_username;
+					owner = other.id;
+					ready = true;
+				}
+				
+			}
+			break;
+		
+		case buttonCommands.set_username:
+			if(usernameInput.text != "") {
+					var buffer = buffer_create(1024, buffer_fixed, 1);
+					buffer_seek(buffer, buffer_seek_start, 0);
+					buffer_write(buffer, buffer_s8, 2);
+					var username = usernameInput.text;
+					show_debug_message("username: " + username);
+					buffer_write(buffer, buffer_string, username + "\n");
+
+					network_send_raw(socket, buffer, buffer_tell(buffer));
+			}
+			break;
 	}
 }

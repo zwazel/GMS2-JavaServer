@@ -16,6 +16,16 @@ function addTextInputBox(_posX, _posY, _maxChars = 64, _placeHolder, _layer = "g
 	return newTextInputInstance.id;
 }
 
+function destroyAllInputs() {
+	for(i = 0; i < array_length(textInputs); i++) {
+		with(textInputs[i]) {
+			instance_destroy();
+		}
+	}	
+	
+	textInputs = [];
+}	
+
 function checkIfCanClearString() {
 	var myCanClearString = true;
 	for(i = 0; i < array_length(textInputs); i++) {

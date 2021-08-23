@@ -13,7 +13,7 @@ if n_id == socket {
 		    var messageId = buffer_read(bufferIn, buffer_u8);
 		    show_debug_message("message id: "+string(messageId));
 		
-			var timeFromServer = GetIntFromBuffer(bufferIn);
+			var timeFromServer = getIntFromBuffer(bufferIn);
 			
 			show_debug_message("time from server: "+string(timeFromServer));
 			

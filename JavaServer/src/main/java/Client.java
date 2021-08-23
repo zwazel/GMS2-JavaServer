@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
@@ -44,6 +46,12 @@ public class Client implements Runnable {
                         dOut.writeInt(time);
                         System.out.println("size = " + dOut.size());
                         dOut.flush();
+                        break;
+                    case 2: // TODO: just testing change to enum
+                        BufferedReader in = new BufferedReader(new InputStreamReader(channel.socket().getInputStream()));
+                        String username = in.readLine();
+                        System.out.println("username = " + username);
+                        break;
                     default:
                         // ...
                         break;

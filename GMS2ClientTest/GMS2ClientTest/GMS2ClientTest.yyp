@@ -1,6 +1,7 @@
 {
   "resources": [
     {"id":{"name":"obj_TextInputBox","path":"objects/obj_TextInputBox/obj_TextInputBox.yy",},"order":1,},
+    {"id":{"name":"ButtonCommands","path":"scripts/ButtonCommands/ButtonCommands.yy",},"order":0,},
     {"id":{"name":"GetIntFromBuffer","path":"scripts/GetIntFromBuffer/GetIntFromBuffer.yy",},"order":0,},
     {"id":{"name":"obj_textInputManager","path":"objects/obj_textInputManager/obj_textInputManager.yy",},"order":2,},
     {"id":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},"order":3,},
@@ -39,6 +40,7 @@
     {"folderPath":"folders/Notes.yy","order":13,"resourceVersion":"1.0","name":"Notes","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Extensions.yy","order":14,"resourceVersion":"1.0","name":"Extensions","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/Networking.yy","order":1,"resourceVersion":"1.0","name":"Networking","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Scripts/Enums.yy","order":2,"resourceVersion":"1.0","name":"Enums","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},
