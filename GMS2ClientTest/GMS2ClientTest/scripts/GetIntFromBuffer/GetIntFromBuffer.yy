@@ -6,7 +6,7 @@
     "path": "folders/Scripts/Networking.yy",
   },
   "resourceVersion": "1.0",
-  "name": "ReadIntFromServer",
+  "name": "GetIntFromBuffer",
   "tags": [],
   "resourceType": "GMScript",
 }

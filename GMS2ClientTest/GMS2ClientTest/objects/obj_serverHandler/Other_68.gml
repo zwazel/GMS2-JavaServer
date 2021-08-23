@@ -14,13 +14,8 @@ if n_id == socket {
 		    show_debug_message("message id: "+string(messageId));
 			
 			show_debug_message("buffer tell 1 = " + string(buffer_tell(bufferIn)));
-			
-			var ch1 = buffer_read(bufferIn, buffer_u8);
-			var ch2 = buffer_read(bufferIn, buffer_u8);
-			var ch3 = buffer_read(bufferIn, buffer_u8);
-			var ch4 = buffer_read(bufferIn, buffer_u8);
-			
-			var timeFromServer = ReadIntFromServer(ch1, ch2, ch3, ch4);
+		
+			var timeFromServer = GetIntFromBuffer(bufferIn);
 			
 			show_debug_message("time from server: "+string(timeFromServer));
 			
