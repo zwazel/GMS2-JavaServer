@@ -35,12 +35,12 @@ public class Client implements Runnable {
 
                 int time;
                 switch (mid) {
-                    case 1:
+                    case 1: // TODO: just testing change to enum
                         time = buffer.getInt();
                         System.out.println("time = " + time);
 
                         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(2);
+                        dOut.write(2); // TODO: just testing, change to enum
                         dOut.writeInt(time);
                         System.out.println("size = " + dOut.size());
                         dOut.flush();
