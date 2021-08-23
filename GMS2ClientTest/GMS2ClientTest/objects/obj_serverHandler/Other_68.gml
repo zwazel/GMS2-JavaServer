@@ -12,14 +12,12 @@ if n_id == socket {
 			
 		    var messageId = buffer_read(bufferIn, buffer_u8);
 		    show_debug_message("message id: "+string(messageId));
-			
-			show_debug_message("buffer tell 1 = " + string(buffer_tell(bufferIn)));
 		
 			var timeFromServer = GetIntFromBuffer(bufferIn);
 			
 			show_debug_message("time from server: "+string(timeFromServer));
 			
-			show_debug_message("buffer tell 2 = " + string(buffer_tell(bufferIn)));
+			latency = current_time - timeFromServer;
   
 		    switch (messageId) {
 				default:
