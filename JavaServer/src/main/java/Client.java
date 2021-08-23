@@ -1,4 +1,3 @@
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -22,18 +21,10 @@ public class Client implements Runnable {
         while (connected) {
             System.out.println("test");
 
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-
             ByteBuffer buffer;
-            ByteBuffer wBuffer;
             try {
                 final int bufferSize = 1024;
                 buffer = ByteBuffer.allocate(bufferSize);
-                wBuffer = ByteBuffer.allocate(bufferSize);
                 channel.read(buffer);   // fill buffer from the input stream
 
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -44,17 +35,6 @@ public class Client implements Runnable {
 
                 int time;
                 switch (mid) {
-                    case 0:
-                        time = buffer.getInt();
-                        System.out.println("time = " + time);
-
-                        wBuffer.position(0);
-                        wBuffer.putInt(1);
-                        System.out.println("buffer position = " + wBuffer.position());
-                        wBuffer.putInt(time);
-                        wBuffer.order(ByteOrder.LITTLE_ENDIAN);
-                        channel.write(wBuffer);
-                        break;
                     case 1:
                         time = buffer.getInt();
                         System.out.println("time = " + time);
@@ -64,10 +44,6 @@ public class Client implements Runnable {
                         dOut.writeInt(time);
                         System.out.println("size = " + dOut.size());
                         dOut.flush();
-
-
-                        DataInputStream dIn = new DataInputStream(channel.socket().getInputStream());
-                        dIn.readInt();
                     default:
                         // ...
                         break;

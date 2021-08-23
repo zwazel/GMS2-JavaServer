@@ -10,7 +10,7 @@ public class Server {
     private boolean running;
 
     public Server(int port) {
-        this.clients = new ArrayList<Client>();
+        this.clients = new ArrayList<>();
         this.running = false;
 
         System.out.print("Trying to Listen on Port : " + port + "...");
@@ -32,8 +32,6 @@ public class Server {
         // Server loop
         while (running) {
             try {
-                // Sleep the thread
-                Thread.sleep(1);
                 // Check for new connections
                 SocketChannel newChannel = socket.accept();
 
@@ -47,7 +45,7 @@ public class Server {
                     clients.add(c);
                 }
 
-            } catch (InterruptedException | IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
