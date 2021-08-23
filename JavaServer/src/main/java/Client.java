@@ -1,3 +1,4 @@
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -39,9 +40,11 @@ public class Client implements Runnable {
                 buffer.position(0);
                 final byte mid = buffer.get();
                 System.out.println("mid = " + mid);
+
+                int time;
                 switch (mid) {
                     case 0:
-                        int time = buffer.getInt();
+                        time = buffer.getInt();
                         System.out.println("time = " + time);
 
                         wBuffer.position(0);
@@ -51,6 +54,15 @@ public class Client implements Runnable {
                         wBuffer.order(ByteOrder.LITTLE_ENDIAN);
                         channel.write(wBuffer);
                         break;
+                    case 1:
+                        time = buffer.getInt();
+                        System.out.println("time = " + time);
+
+                        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
+                        dOut.write(255);
+                        dOut.writeInt(time);
+                        System.out.println("size = " + dOut.size());
+                        dOut.flush();
                     default:
                         // ...
                         break;

@@ -10,10 +10,10 @@ if n_id == socket {
 			show_debug_message("buffer size = " + string(ds_map_find_value(async_load, "size")));
 		    buffer_seek(bufferIn, buffer_seek_start, 0);
 			
-		    var messageId = buffer_read(bufferIn, buffer_s8);
+		    var messageId = buffer_read(bufferIn, buffer_u8);
 		    show_debug_message("message id: "+string(messageId));
 			
-			var timeFromServer = buffer_read(bufferIn, buffer_s32);
+			var timeFromServer = buffer_read(bufferIn, buffer_u32);
 			show_debug_message("time from server: "+string(timeFromServer));
   
 		    switch (messageId) {
