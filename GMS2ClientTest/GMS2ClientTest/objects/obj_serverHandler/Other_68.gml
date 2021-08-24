@@ -22,10 +22,7 @@ if n_id == socket {
 					break;
 				
 				case 2:
-					show_debug_message("buffer position = " + string(buffer_tell(bufferIn)));
 					var stringLength = getIntFromBuffer(bufferIn);
-					show_debug_message("buffer position = " + string(buffer_tell(bufferIn)));
-					show_debug_message("stringLength = " + string(stringLength));
 				
 					var textFromServer = getStringFromBuffer(bufferIn, stringLength);
 					show_debug_message("text from server = " + textFromServer);
