@@ -15,18 +15,11 @@ if n_id == socket {
 		    show_debug_message("message id: "+string(messageId));
   
 		    switch (messageId) {
-				case 1:
+				case networkCommands.send_ping:
 					var timeFromServer = getIntFromBuffer(bufferIn);
 					show_debug_message("time from server: "+string(timeFromServer));
 					latency = current_time - timeFromServer;
 					break;
-				
-				case 2:
-					var stringLength = getIntFromBuffer(bufferIn);
-				
-					var textFromServer = getStringFromBuffer(bufferIn, stringLength);
-					show_debug_message("text from server = " + textFromServer);
-				break;
 				
 				default:
 					break;
