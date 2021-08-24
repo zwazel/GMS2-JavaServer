@@ -33,14 +33,15 @@ public class Client implements Runnable {
                 final byte mid = buffer.get();
                 System.out.println("mid = " + mid);
 
+                DataOutputStream dOut;
                 int time;
                 switch (mid) {
                     case 1: // TODO: just testing change to enum
                         time = buffer.getInt();
                         System.out.println("time = " + time);
 
-                        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(2); // TODO: just testing, change to enum
+                        dOut = new DataOutputStream(channel.socket().getOutputStream());
+                        dOut.write(1); // TODO: just testing, change to enum
                         dOut.writeInt(time);
                         System.out.println("size = " + dOut.size());
                         dOut.flush();
@@ -51,6 +52,14 @@ public class Client implements Runnable {
                         String username = getStringFromBuffer(buffer, stringLength);
 
                         System.out.println("username = " + username);
+
+                        dOut = new DataOutputStream(channel.socket().getOutputStream());
+                        dOut.write(2); // TODO: just testing, change to enum
+
+                        putStringInStream(dOut, "gotcha");
+
+                        System.out.println("size = " + dOut.size());
+                        dOut.flush();
                         break;
                     default:
                         // ...
@@ -67,6 +76,19 @@ public class Client implements Runnable {
                     ex1.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void putStringInStream(DataOutputStream dOut, String s) throws IOException {
+        char[] chars = s.toCharArray();
+        dOut.writeInt(chars.length);
+        System.out.println("string length = " + chars.length);
+        for(char c : chars) {
+            System.out.println("c = " + c);
+            int i = c;
+            System.out.println("i = " + i);
+
+            dOut.write(i);
         }
     }
 

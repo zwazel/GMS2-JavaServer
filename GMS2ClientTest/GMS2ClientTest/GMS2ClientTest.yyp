@@ -3,6 +3,7 @@
     {"id":{"name":"obj_TextInputBox","path":"objects/obj_TextInputBox/obj_TextInputBox.yy",},"order":1,},
     {"id":{"name":"ButtonCommands","path":"scripts/ButtonCommands/ButtonCommands.yy",},"order":0,},
     {"id":{"name":"GetIntFromBuffer","path":"scripts/GetIntFromBuffer/GetIntFromBuffer.yy",},"order":0,},
+    {"id":{"name":"GetStringFromBuffer","path":"scripts/GetStringFromBuffer/GetStringFromBuffer.yy",},"order":1,},
     {"id":{"name":"obj_textInputManager","path":"objects/obj_textInputManager/obj_textInputManager.yy",},"order":2,},
     {"id":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},"order":3,},
     {"id":{"name":"obj_serverHandler","path":"objects/obj_serverHandler/obj_serverHandler.yy",},"order":0,},
