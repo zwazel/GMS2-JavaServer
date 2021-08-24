@@ -1,3 +1,5 @@
+import GlobalStuff.NetworkCommands;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,31 +33,31 @@ public class Client implements Runnable {
 
                 buffer.position(0);
                 final byte mid = buffer.get();
-                System.out.println("mid = " + mid);
 
                 DataOutputStream dOut;
-                int time;
-                switch (mid) {
-                    case 1: // TODO: change to enum
-                        time = buffer.getInt();
+                NetworkCommands command = NetworkCommands.getValues()[mid];
+                System.out.println("command = " + command);
+                switch (command) {
+                    case send_ping: // TODO: change to enum
+                        int time = buffer.getInt();
 
                         System.out.println("time = " + time);
 
                         dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(1); // TODO: change to enum
+                        dOut.write(command.ordinal()); // TODO: change to enum
                         dOut.writeInt(time);
                         dOut.flush();
                         break;
-                    case 2: // TODO: change to enum
+                    case receive_username: // TODO: change to enum
                         int stringLength = buffer.getInt();
                         String username = getStringFromBuffer(buffer, stringLength);
 
                         System.out.println("username = " + username);
 
-                        dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(2); // TODO: change to enum
-                        putStringInStream(dOut, username);
-                        dOut.flush();
+//                        dOut = new DataOutputStream(channel.socket().getOutputStream());
+//                        dOut.write(2); // TODO: change to enum
+//                        putStringInStream(dOut, username);
+//                        dOut.flush();
                         break;
                     default:
                         // ...
