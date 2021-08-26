@@ -6,6 +6,8 @@ usernameInput = noone;
 latency = 0;
 global.buffer = buffer_create(1024, buffer_fixed, 1);
 socket = noone;
+clients = [];
+mePlayer = noone;
 
 with(inputManager) {
 	other.ipInput = addTextInputBox(room_width/2, room_height/2-32,128, "IP of Server", "gui", "127.0.0.1");
@@ -68,6 +70,12 @@ function buttonPressed(button) {
 					buffer_write(buffer, buffer_string, username);
 
 					network_send_raw(socket, buffer, buffer_tell(buffer));
+					
+					mePlayer.username = username;
+					mePlayer.ready = true;
+					
+					instance_destroy(usernameInput);
+					instance_destroy(currentButton);
 			}
 			break;
 	}

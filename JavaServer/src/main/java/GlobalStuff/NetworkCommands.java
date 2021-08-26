@@ -3,7 +3,7 @@ package GlobalStuff;
 public enum NetworkCommands {
     client_connect,
     client_disconnect,
-    send_id,
+    send_client_its_id,
     send_ping,
     receive_username;
 

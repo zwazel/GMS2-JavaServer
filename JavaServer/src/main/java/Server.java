@@ -39,7 +39,7 @@ public class Server {
                 // the client list
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
-                    Client c = new Client(this, newChannel);
+                    Client c = new Client(clients.size(), this, newChannel);
                     Thread t = new Thread(c);
                     t.start();
                     clients.add(c);
