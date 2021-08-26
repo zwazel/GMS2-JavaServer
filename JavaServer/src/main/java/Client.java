@@ -45,9 +45,33 @@ public class Client implements Runnable {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
         dOut.writeInt(this.myId);
-        if (username != null) {
-            putStringInStream(dOut, username);
+        if (this.username != null) {
+            putStringInStream(dOut, this.username);
         }
+        dOut.flush();
+    }
+
+    public void newClientConnected(Client client) throws IOException {
+        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
+        dOut.write(NetworkCommands.client_connect.ordinal());
+        dOut.writeInt(client.myId);
+        boolean withUsername = client.username != null;
+
+        dOut.writeBoolean(withUsername);
+
+        if(withUsername) {
+            putStringInStream(dOut, client.username);
+        }
+
+        dOut.flush();
+    }
+
+    public void updateUsername(Client client) throws IOException {
+        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
+        dOut.write(NetworkCommands.client_connect.ordinal());
+        dOut.writeInt(client.myId);
+        putStringInStream(dOut, client.username);
+
         dOut.flush();
     }
 
@@ -89,6 +113,8 @@ public class Client implements Runnable {
                         System.out.println("username = " + username);
 
                         this.username = username;
+
+                        server.updateUsername(this);
                         break;
                     default:
                         // ...
@@ -96,7 +122,7 @@ public class Client implements Runnable {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
-                System.out.println(channel.socket().getInetAddress().toString() + " has disconnected.");
+                System.out.println(channel.socket().getInetAddress().toString() + " (" + this.username + ") has disconnected.");
                 connected = false;
                 server.removeClient(this);
                 try {
@@ -106,5 +132,45 @@ public class Client implements Runnable {
                 }
             }
         }
+    }
+
+    public SocketChannel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(SocketChannel channel) {
+        this.channel = channel;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public int getMyId() {
+        return myId;
+    }
+
+    public void setMyId(int myId) {
+        this.myId = myId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

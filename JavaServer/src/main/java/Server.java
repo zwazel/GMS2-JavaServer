@@ -42,6 +42,11 @@ public class Server {
                     Client c = new Client(clients.size(), this, newChannel);
                     Thread t = new Thread(c);
                     t.start();
+
+                    for (Client cc : clients) {
+                        cc.newClientConnected(c);
+                    }
+
                     clients.add(c);
                 }
 
@@ -49,6 +54,20 @@ public class Server {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    public void updateUsername(Client client) {
+        for (Client c : clients) {
+            if (c.getMyId() == client.getMyId()) {
+                continue;
+            }
+
+            try {
+                c.updateUsername(client);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

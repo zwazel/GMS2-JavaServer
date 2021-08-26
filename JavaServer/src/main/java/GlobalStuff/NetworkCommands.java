@@ -5,7 +5,8 @@ public enum NetworkCommands {
     client_disconnect,
     send_client_its_id,
     send_ping,
-    receive_username;
+    receive_username,
+    update_username;
 
     private static final NetworkCommands[] values = values();
 
