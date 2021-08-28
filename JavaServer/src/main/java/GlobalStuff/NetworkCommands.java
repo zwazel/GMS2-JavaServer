@@ -6,7 +6,8 @@ public enum NetworkCommands {
     send_client_its_id,
     send_ping,
     receive_username,
-    update_username;
+    update_username,
+    send_all_clients;
 
     private static final NetworkCommands[] values = values();
 

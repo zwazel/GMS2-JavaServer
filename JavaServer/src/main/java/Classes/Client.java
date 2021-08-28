@@ -1,16 +1,18 @@
+package Classes;
+
 import GlobalStuff.NetworkCommands;
+import util.ClientUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 
-import static util.NetworkUtils.getStringFromBuffer;
-import static util.NetworkUtils.putStringInStream;
+import static util.NetworkUtils.GetUtils.getStringFromBuffer;
 
 public class Client implements Runnable {
-
     private SocketChannel channel;
     private boolean connected = true;
     private Server server;
@@ -29,49 +31,10 @@ public class Client implements Runnable {
         }
     }
 
-    public Client(int id, String username, Server server, SocketChannel channel) {
-        this.myId = id;
-        this.server = server;
-        this.channel = channel;
-
-        try {
-            initClientThroughNetwork();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void initClientThroughNetwork() throws IOException {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
         dOut.writeInt(this.myId);
-        if (this.username != null) {
-            putStringInStream(dOut, this.username);
-        }
-        dOut.flush();
-    }
-
-    public void newClientConnected(Client client) throws IOException {
-        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-        dOut.write(NetworkCommands.client_connect.ordinal());
-        dOut.writeInt(client.myId);
-        boolean withUsername = client.username != null;
-
-        dOut.writeBoolean(withUsername);
-
-        if(withUsername) {
-            putStringInStream(dOut, client.username);
-        }
-
-        dOut.flush();
-    }
-
-    public void updateUsername(Client client) throws IOException {
-        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-        dOut.write(NetworkCommands.client_connect.ordinal());
-        dOut.writeInt(client.myId);
-        putStringInStream(dOut, client.username);
-
         dOut.flush();
     }
 
@@ -112,9 +75,17 @@ public class Client implements Runnable {
 
                         System.out.println("username = " + username);
 
+                        boolean newConnection = (this.username == null);
                         this.username = username;
+                        List<Client> clients = server.getClients();
 
-                        server.updateUsername(this);
+                        if (newConnection) {
+                            ClientUtils.newClientConnected(this, clients);
+
+                            ClientUtils.sendAllClientsToClient(this, clients);
+                        } else {
+                            ClientUtils.updateUsername(this, clients);
+                        }
                         break;
                     default:
                         // ...

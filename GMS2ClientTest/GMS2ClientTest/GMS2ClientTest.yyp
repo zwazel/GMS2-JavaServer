@@ -1,6 +1,7 @@
 {
   "resources": [
     {"id":{"name":"obj_TextInputBox","path":"objects/obj_TextInputBox/obj_TextInputBox.yy",},"order":1,},
+    {"id":{"name":"GetClientFromBuffer","path":"scripts/GetClientFromBuffer/GetClientFromBuffer.yy",},"order":2,},
     {"id":{"name":"ButtonCommands","path":"scripts/ButtonCommands/ButtonCommands.yy",},"order":0,},
     {"id":{"name":"obj_player_client","path":"objects/obj_player_client/obj_player_client.yy",},"order":6,},
     {"id":{"name":"NetworkCommands","path":"scripts/NetworkCommands/NetworkCommands.yy",},"order":1,},

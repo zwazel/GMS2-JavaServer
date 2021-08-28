@@ -16,7 +16,7 @@ if n_id == socket {
   
 		    switch (messageId) {
 				case networkCommands.receive_my_id:
-					var clientID = getIntFromBuffer(bufferIn);
+					var clientID = GetIntFromBuffer(bufferIn);
 					mePlayer = instance_create_layer(room_width/2, room_height/2,"instances", obj_player_host);
 					with(mePlayer) {
 						myId = clientID;
@@ -24,17 +24,26 @@ if n_id == socket {
 				break;
 				
 				case networkCommands.send_ping:
-					var timeFromServer = getIntFromBuffer(bufferIn);
+					var timeFromServer = GetIntFromBuffer(bufferIn);
 					show_debug_message("time from server: "+string(timeFromServer));
 					latency = current_time - timeFromServer;
 					break;
-				case networkCommands.client_connect:
-					var clientID = getIntFromBuffer(bufferIn);
 					
-					break;
+				case networkCommands.client_connect:
+					var newClient = GetClientFromBuffer(bufferIn);
+					array_push(clients, newClient);
+				break;
+					
+				case networkCommands.get_all_clients:
+					var amountClients = GetIntFromBuffer(bufferIn);
+					for(var i = 0; i < amountClients; i++) {
+						var newClient = GetClientFromBuffer(bufferIn);
+						array_push(clients, newClient);
+					}
+				break;
 				
 				default:
-					break;
+				break;
 			}
     }
 }

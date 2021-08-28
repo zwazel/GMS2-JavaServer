@@ -1,3 +1,5 @@
+package Classes;
+
 import java.io.IOException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -43,10 +45,6 @@ public class Server {
                     Thread t = new Thread(c);
                     t.start();
 
-                    for (Client cc : clients) {
-                        cc.newClientConnected(c);
-                    }
-
                     clients.add(c);
                 }
 
@@ -57,26 +55,37 @@ public class Server {
         }
     }
 
-    public void updateUsername(Client client) {
-        for (Client c : clients) {
-            if (c.getMyId() == client.getMyId()) {
-                continue;
-            }
-
-            try {
-                c.updateUsername(client);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void removeClient(Client client) {
         clients.remove(client);
+
+        // todo tell clients someone has disconnected
+    }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
+    }
+
+    public ServerSocketChannel getSocket() {
+        return socket;
+    }
+
+    public void setSocket(ServerSocketChannel socket) {
+        this.socket = socket;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public static void main(String... args) {
         new Server(21337);
     }
-
 }
