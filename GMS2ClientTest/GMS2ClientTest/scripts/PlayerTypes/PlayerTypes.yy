@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Values",
-    "path": "folders/Scripts/Networking/Get/Values.yy",
+    "name": "Enums",
+    "path": "folders/Scripts/Enums.yy",
   },
   "resourceVersion": "1.0",
-  "name": "GetDoubleFromBuffer",
+  "name": "PlayerTypes",
   "tags": [],
   "resourceType": "GMScript",
 }

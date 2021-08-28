@@ -21,11 +21,7 @@ if n_id == socket {
 				break;
 				
 				case networkCommands.receive_my_id:
-					var clientID = GetIntFromBuffer(bufferIn);
-					mePlayer = instance_create_layer(room_width/2, room_height/2,"instances", obj_player_host);
-					with(mePlayer) {
-						myId = clientID;
-					}
+					mePlayer = GetClientFromBuffer(bufferIn, false, false, PlayerTypes.host);
 				break;
 				
 				case networkCommands.send_ping:

@@ -40,8 +40,8 @@ public class Client implements Runnable {
     private void initClientThroughNetwork() throws IOException {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
-        dOut.writeInt(this.myId);
-        PutUtils.putPositionInStream(dOut, this.position);
+        PutUtils.putClientInStream(dOut, this,false);
+
         dOut.flush();
     }
 
@@ -67,10 +67,6 @@ public class Client implements Runnable {
                 System.out.println("command = " + command);
                 switch (command) {
                     case test:
-                        dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(command.ordinal());
-                        dOut.writeDouble(123.23);
-                        dOut.flush();
                         break;
 
                     case send_ping:

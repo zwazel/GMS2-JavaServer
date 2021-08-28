@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Networking",
-    "path": "folders/Scripts/Networking.yy",
+    "name": "Objects",
+    "path": "folders/Scripts/Networking/Get/Objects.yy",
   },
   "resourceVersion": "1.0",
   "name": "GetClientFromBuffer",

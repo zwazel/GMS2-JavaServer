@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Networking",
-    "path": "folders/Scripts/Networking.yy",
+    "name": "Values",
+    "path": "folders/Scripts/Networking/Get/Values.yy",
   },
   "resourceVersion": "1.0",
   "name": "GetIntFromBuffer",
