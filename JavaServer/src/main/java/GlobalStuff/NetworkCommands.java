@@ -1,6 +1,7 @@
 package GlobalStuff;
 
 public enum NetworkCommands {
+    test,
     client_connect,
     client_disconnect,
     send_client_its_id,

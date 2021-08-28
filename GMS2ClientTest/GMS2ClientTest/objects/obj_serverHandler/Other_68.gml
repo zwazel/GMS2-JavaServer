@@ -15,6 +15,11 @@ if n_id == socket {
 		    show_debug_message("message id: "+string(messageId));
   
 		    switch (messageId) {
+				case networkCommands.test:
+					var long = GetLongFromBuffer(bufferIn);
+					show_debug_message(string(long));
+				break;
+				
 				case networkCommands.receive_my_id:
 					var clientID = GetIntFromBuffer(bufferIn);
 					mePlayer = instance_create_layer(room_width/2, room_height/2,"instances", obj_player_host);
@@ -50,6 +55,7 @@ if n_id == socket {
 							var dsListIndex = ds_list_find_index(clients, currentClient);
 							ds_list_delete(clients, dsListIndex);
 							instance_destroy(currentClient);
+							break;
 						}
 					}
 				break;

@@ -2,9 +2,13 @@ package Classes;
 
 import GlobalStuff.NetworkCommands;
 import util.ClientUtils;
+import util.NetworkUtils.PutUtils;
+import util.Position;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
@@ -18,9 +22,11 @@ public class Client implements Runnable {
     private Server server;
     private int myId;
     private String username;
+    private Position position;
 
-    public Client(int id, Server server, SocketChannel channel) {
+    public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
+        this.position = position;
         this.server = server;
         this.channel = channel;
 
@@ -35,6 +41,7 @@ public class Client implements Runnable {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
         dOut.writeInt(this.myId);
+        PutUtils.putPositionInStream(dOut, this.position);
         dOut.flush();
     }
 
@@ -59,6 +66,13 @@ public class Client implements Runnable {
                 NetworkCommands command = NetworkCommands.getValues()[mid];
                 System.out.println("command = " + command);
                 switch (command) {
+                    case test:
+                        dOut = new DataOutputStream(channel.socket().getOutputStream());
+                        dOut.write(command.ordinal());
+                        dOut.writeLong(1123213213133213219L);
+                        dOut.flush();
+                        break;
+
                     case send_ping:
                         int time = buffer.getInt();
 
@@ -78,6 +92,9 @@ public class Client implements Runnable {
                         boolean newConnection = (this.username == null);
                         this.username = username;
                         List<Client> clients = server.getClients();
+
+                        DataInputStream dIn = new DataInputStream(this.channel.socket().getInputStream());
+                        dIn.readDouble();
 
                         if (newConnection) {
                             ClientUtils.newClientConnected(this, clients);
@@ -143,5 +160,13 @@ public class Client implements Runnable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

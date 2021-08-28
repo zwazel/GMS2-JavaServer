@@ -1,4 +1,5 @@
 enum networkCommands {
+	test,
 	client_connect,
 	client_disconnect,
 	receive_my_id,

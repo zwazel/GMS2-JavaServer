@@ -1,6 +1,7 @@
 package Classes;
 
 import util.ClientUtils;
+import util.Position;
 
 import java.io.IOException;
 import java.nio.channels.ServerSocketChannel;
@@ -12,11 +13,13 @@ public class Server {
     private List<Client> clients;
     private ServerSocketChannel socket;
     private boolean running;
+    private Position startPosition;
     private int idCounter = 0;
 
     public Server(int port) {
         this.clients = new ArrayList<>();
         this.running = false;
+        this.startPosition = new Position(100, 100);
 
         System.out.print("Trying to Listen on Port : " + port + "...");
         try {
@@ -44,7 +47,7 @@ public class Server {
                 // the client list
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
-                    Client c = new Client(idCounter++, this, newChannel);
+                    Client c = new Client(idCounter++, startPosition, this, newChannel);
                     Thread t = new Thread(c);
                     t.start();
 
