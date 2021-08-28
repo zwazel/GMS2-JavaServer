@@ -11,35 +11,35 @@ import java.util.List;
 import static util.NetworkUtils.PutUtils.putClientInStream;
 
 public class ClientUtils {
-    public static void sendAllClientsToClient(Client c, List<Client> clients) {
+    public static void sendAllClientsToClient(Client c, List<Client> clients) throws IOException {
         int clientSize = clients.size();
         System.out.println("clients.size() = " + clientSize);
 
         if (clientSize > 1) {
-            int clientSizeToSend = clientSize-1;
+            int clientSizeToSend = clientSize - 1;
             SocketChannel channel = c.getChannel();
-            try {
-                DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-                dOut.write(NetworkCommands.send_all_clients.ordinal());
-                dOut.writeInt(clientSizeToSend);
+            DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
+            dOut.write(NetworkCommands.send_all_clients.ordinal());
+            dOut.writeInt(clientSizeToSend);
 
-                for (Client cc : clients) {
-                    if (cc.getMyId() == c.getMyId()) {
-                        continue;
-                    }
-                    putClientInStream(dOut, cc);
+            for (Client cc : clients) {
+                if (cc.getMyId() == c.getMyId()) {
+                    continue;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                putClientInStream(dOut, cc);
             }
         }
     }
 
-    public static void newClientConnected(Client c, List<Client> clients) {
+    public static void clientDisconnected() {
+
+    }
+
+    public static void newClientConnected(Client c, List<Client> clients) throws IOException {
         updateUsername(c, clients);
     }
 
-    public static void updateUsername(Client client, List<Client> clients) {
+    public static void updateUsername(Client client, List<Client> clients) throws IOException {
         SocketChannel channel;
         DataOutputStream dOut;
         for (Client c : clients) {
@@ -48,16 +48,12 @@ public class ClientUtils {
                 continue;
             }
 
-            try {
-                dOut = new DataOutputStream(channel.socket().getOutputStream());
+            dOut = new DataOutputStream(channel.socket().getOutputStream());
 
-                dOut.write(NetworkCommands.client_connect.ordinal());
-                putClientInStream(dOut, client);
+            dOut.write(NetworkCommands.client_connect.ordinal());
+            putClientInStream(dOut, client);
 
-                dOut.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            dOut.flush();
         }
     }
 }
