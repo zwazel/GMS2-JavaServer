@@ -69,7 +69,7 @@ public class Client implements Runnable {
                     case test:
                         dOut = new DataOutputStream(channel.socket().getOutputStream());
                         dOut.write(command.ordinal());
-                        dOut.writeLong(1123213213133213219L);
+                        dOut.writeDouble(123.23);
                         dOut.flush();
                         break;
 
@@ -92,9 +92,6 @@ public class Client implements Runnable {
                         boolean newConnection = (this.username == null);
                         this.username = username;
                         List<Client> clients = server.getClients();
-
-                        DataInputStream dIn = new DataInputStream(this.channel.socket().getInputStream());
-                        dIn.readDouble();
 
                         if (newConnection) {
                             ClientUtils.newClientConnected(this, clients);

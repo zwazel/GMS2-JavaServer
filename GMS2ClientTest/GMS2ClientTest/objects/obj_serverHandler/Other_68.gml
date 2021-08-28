@@ -16,7 +16,7 @@ if n_id == socket {
   
 		    switch (messageId) {
 				case networkCommands.test:
-					var long = GetLongFromBuffer(bufferIn);
+					var long = GetDoubleFromBuffer(bufferIn);
 					show_debug_message(string(long));
 				break;
 				
