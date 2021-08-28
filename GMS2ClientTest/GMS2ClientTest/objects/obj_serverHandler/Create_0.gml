@@ -6,7 +6,7 @@ usernameInput = noone;
 latency = 0;
 global.buffer = buffer_create(1024, buffer_fixed, 1);
 socket = noone;
-clients = [];
+clients = ds_list_create();
 mePlayer = noone;
 
 with(inputManager) {

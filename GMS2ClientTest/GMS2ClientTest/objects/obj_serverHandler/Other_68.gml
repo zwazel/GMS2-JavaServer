@@ -31,14 +31,26 @@ if n_id == socket {
 					
 				case networkCommands.client_connect:
 					var newClient = GetClientFromBuffer(bufferIn);
-					array_push(clients, newClient);
+					ds_list_add(clients, newClient);
 				break;
 					
 				case networkCommands.get_all_clients:
 					var amountClients = GetIntFromBuffer(bufferIn);
 					for(var i = 0; i < amountClients; i++) {
 						var newClient = GetClientFromBuffer(bufferIn);
-						array_push(clients, newClient);
+						ds_list_add(clients, newClient);
+					}
+				break;
+				
+				case networkCommands.client_disconnect:
+					var clientID = GetIntFromBuffer(bufferIn);
+					for(var i = 0; i < ds_list_size(clients); i++) {
+						var currentClient = ds_list_find_value(clients, i);
+						if(currentClient.myId == clientID) {
+							var dsListIndex = ds_list_find_index(clients, currentClient);
+							ds_list_delete(clients, dsListIndex);
+							instance_destroy(currentClient);
+						}
 					}
 				break;
 				

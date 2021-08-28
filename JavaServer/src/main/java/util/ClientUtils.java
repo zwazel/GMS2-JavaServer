@@ -31,8 +31,20 @@ public class ClientUtils {
         }
     }
 
-    public static void clientDisconnected() {
+    public static void clientDisconnected(Client c, List<Client> clients) throws IOException {
+        SocketChannel channel;
+        DataOutputStream dOut;
+        for (Client cc : clients) {
+            channel = cc.getChannel();
+            if (cc.getMyId() == c.getMyId()) {
+                continue;
+            }
 
+            dOut = new DataOutputStream(channel.socket().getOutputStream());
+            dOut.write(NetworkCommands.client_disconnect.ordinal());
+            dOut.writeInt(c.getMyId());
+            dOut.flush();
+        }
     }
 
     public static void newClientConnected(Client c, List<Client> clients) throws IOException {
@@ -49,10 +61,8 @@ public class ClientUtils {
             }
 
             dOut = new DataOutputStream(channel.socket().getOutputStream());
-
             dOut.write(NetworkCommands.client_connect.ordinal());
             putClientInStream(dOut, client);
-
             dOut.flush();
         }
     }

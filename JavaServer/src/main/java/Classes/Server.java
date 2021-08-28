@@ -1,5 +1,7 @@
 package Classes;
 
+import util.ClientUtils;
+
 import java.io.IOException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
@@ -10,6 +12,7 @@ public class Server {
     private List<Client> clients;
     private ServerSocketChannel socket;
     private boolean running;
+    private int idCounter = 0;
 
     public Server(int port) {
         this.clients = new ArrayList<>();
@@ -41,7 +44,7 @@ public class Server {
                 // the client list
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
-                    Client c = new Client(clients.size(), this, newChannel);
+                    Client c = new Client(idCounter++, this, newChannel);
                     Thread t = new Thread(c);
                     t.start();
 
@@ -56,9 +59,12 @@ public class Server {
     }
 
     public void removeClient(Client client) {
-        clients.remove(client);
-
-        // todo tell clients someone has disconnected
+        try {
+            clients.remove(client);
+            ClientUtils.clientDisconnected(client, clients);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Client> getClients() {
@@ -83,6 +89,14 @@ public class Server {
 
     public void setRunning(boolean running) {
         this.running = running;
+    }
+
+    public int getIdCounter() {
+        return idCounter;
+    }
+
+    public void setIdCounter(int idCounter) {
+        this.idCounter = idCounter;
     }
 
     public static void main(String... args) {
