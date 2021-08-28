@@ -6,5 +6,7 @@ enum networkCommands {
 	send_ping,
 	send_username,
 	update_username,
-	get_all_clients
+	get_all_clients,
+	send_move_direction,
+	get_move_direction,
 }

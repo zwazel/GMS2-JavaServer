@@ -2,18 +2,18 @@ package Classes;
 
 import GlobalStuff.NetworkCommands;
 import util.ClientUtils;
+import util.Direction;
 import util.NetworkUtils.PutUtils;
 import util.Position;
 
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
+import static util.NetworkUtils.GetUtils.getDirectionFromBuffer;
 import static util.NetworkUtils.GetUtils.getStringFromBuffer;
 
 public class Client implements Runnable {
@@ -23,8 +23,27 @@ public class Client implements Runnable {
     private int myId;
     private String username;
     private Position position;
+    private int speed;
+    private int health;
+    private Direction direction = new Direction();
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
+        this.myId = id;
+        this.position = position;
+        this.server = server;
+        this.channel = channel;
+
+        this.health = 100;
+        this.speed = 3;
+
+        try {
+            initClientThroughNetwork();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Client(int id, int speed, int health, Position position, Server server, SocketChannel channel) {
         this.myId = id;
         this.position = position;
         this.server = server;
@@ -40,17 +59,14 @@ public class Client implements Runnable {
     private void initClientThroughNetwork() throws IOException {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
-        PutUtils.putClientInStream(dOut, this,false);
+        PutUtils.putClientInStream(dOut, this, false);
 
         dOut.flush();
     }
 
     @Override
     public void run() {
-        System.out.println("run, connected = " + connected);
         while (connected) {
-            System.out.println("test");
-
             ByteBuffer buffer;
             try {
                 final int bufferSize = 1024;
@@ -62,6 +78,7 @@ public class Client implements Runnable {
                 buffer.position(0);
                 final byte mid = buffer.get();
 
+                List<Client> clients = server.getClients();
                 DataOutputStream dOut;
                 NetworkCommands command = NetworkCommands.getValues()[mid];
                 System.out.println("command = " + command);
@@ -87,7 +104,6 @@ public class Client implements Runnable {
 
                         boolean newConnection = (this.username == null);
                         this.username = username;
-                        List<Client> clients = server.getClients();
 
                         if (newConnection) {
                             ClientUtils.newClientConnected(this, clients);
@@ -96,6 +112,15 @@ public class Client implements Runnable {
                         } else {
                             ClientUtils.updateUsername(this, clients);
                         }
+                        break;
+
+                    case get_move_direction:
+                        byte[] directions = getDirectionFromBuffer(buffer);
+
+                        this.direction.setHorizontal(directions[0]);
+                        this.direction.setVertical(directions[1]);
+
+                        ClientUtils.setDirection(this, clients);
                         break;
                     default:
                         // ...
@@ -161,5 +186,29 @@ public class Client implements Runnable {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 }

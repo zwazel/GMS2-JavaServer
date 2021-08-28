@@ -21,7 +21,7 @@ if n_id == socket {
 				break;
 				
 				case networkCommands.receive_my_id:
-					mePlayer = GetClientFromBuffer(bufferIn, false, false, PlayerTypes.host);
+					mePlayer = GetClientFromBuffer(bufferIn, id, false, false, PlayerTypes.host);
 				break;
 				
 				case networkCommands.send_ping:
@@ -31,26 +31,40 @@ if n_id == socket {
 					break;
 					
 				case networkCommands.client_connect:
-					var newClient = GetClientFromBuffer(bufferIn);
+					var newClient = GetClientFromBuffer(bufferIn, id);
 					ds_list_add(clients, newClient);
 				break;
 					
 				case networkCommands.get_all_clients:
 					var amountClients = GetIntFromBuffer(bufferIn);
 					for(var i = 0; i < amountClients; i++) {
-						var newClient = GetClientFromBuffer(bufferIn);
+						var newClient = GetClientFromBuffer(bufferIn, id);
 						ds_list_add(clients, newClient);
 					}
 				break;
 				
 				case networkCommands.client_disconnect:
 					var clientID = GetIntFromBuffer(bufferIn);
+					
 					for(var i = 0; i < ds_list_size(clients); i++) {
 						var currentClient = ds_list_find_value(clients, i);
 						if(currentClient.myId == clientID) {
 							var dsListIndex = ds_list_find_index(clients, currentClient);
 							ds_list_delete(clients, dsListIndex);
 							instance_destroy(currentClient);
+							break;
+						}
+					}
+				break;
+				
+				case networkCommands.get_move_direction:
+					var clientID = GetIntFromBuffer(bufferIn);
+					var directions = GetDirectionFromBuffer(bufferIn);
+					
+					for(var i = 0; i < ds_list_size(clients); i++) {
+						var currentClient = ds_list_find_value(clients, i);
+						if(currentClient.myId == clientID) {
+							currentClient.setMyDirection(directions[0], directions[1]);
 							break;
 						}
 					}

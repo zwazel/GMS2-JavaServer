@@ -9,11 +9,31 @@ import java.nio.channels.SocketChannel;
 import java.util.List;
 
 import static util.NetworkUtils.PutUtils.putClientInStream;
+import static util.NetworkUtils.PutUtils.putDirectionInStream;
 
 public class ClientUtils {
+    public static void setDirection(Client c, List<Client> clients) throws IOException {
+        int clientSize = clients.size();
+        if (clientSize > 1) {
+            SocketChannel channel;
+            DataOutputStream dOut;
+
+            for (Client cc : clients) {
+                if (cc.getMyId() == c.getMyId()) {
+                    continue;
+                }
+
+                channel = cc.getChannel();
+                dOut = new DataOutputStream(channel.socket().getOutputStream());
+                dOut.write(NetworkCommands.send_move_direction.ordinal());
+                dOut.writeInt(c.getMyId());
+                putDirectionInStream(dOut,c.getDirection());
+            }
+        }
+    }
+
     public static void sendAllClientsToClient(Client c, List<Client> clients) throws IOException {
         int clientSize = clients.size();
-        System.out.println("clients.size() = " + clientSize);
 
         if (clientSize > 1) {
             int clientSizeToSend = clientSize - 1;

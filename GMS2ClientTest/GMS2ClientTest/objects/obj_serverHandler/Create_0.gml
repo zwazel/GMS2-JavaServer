@@ -4,7 +4,6 @@ ipInput = noone;
 portInput = noone;
 usernameInput = noone;
 latency = 0;
-global.buffer = buffer_create(1024, buffer_fixed, 1);
 socket = noone;
 clients = ds_list_create();
 mePlayer = noone;
@@ -20,6 +19,16 @@ with(currentButton) {
 	owner = other.id;
 	cmd = buttonCommands.connect_to_server;
 	ready = true;
+}
+
+function sendMoveCommand(dirX, dirY) {
+	var buffer = buffer_create(1024, buffer_fixed, 1);
+	
+	buffer_write(buffer, buffer_s8, networkCommands.send_move_direction);
+	PutDirectionInBuffer(buffer, dirX, dirY);
+	network_send_raw(socket, buffer, buffer_tell(buffer));
+	
+	buffer_delete(buffer);
 }
 
 function buttonPressed(button) {
@@ -76,6 +85,7 @@ function buttonPressed(button) {
 					
 					instance_destroy(usernameInput);
 					instance_destroy(currentButton);
+					buffer_delete(buffer);
 			}
 			break;
 	}

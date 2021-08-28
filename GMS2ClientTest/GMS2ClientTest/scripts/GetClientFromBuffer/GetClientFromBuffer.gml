@@ -1,5 +1,7 @@
-function GetClientFromBuffer(buffer, withUsername = true, setReady = true, playerType = PlayerTypes.enemy, instanceLayer = "instances"){
+function GetClientFromBuffer(buffer, server, withUsername = true, setReady = true, playerType = PlayerTypes.enemy, instanceLayer = "instances"){
 	var clientID = GetIntFromBuffer(buffer);
+	var clientHealth = GetIntFromBuffer(buffer);
+	var clientSpeed = GetIntFromBuffer(buffer);
 	var clientX = GetDoubleFromBuffer(buffer);
 	var clientY = GetDoubleFromBuffer(buffer);
 	var clientUsername = "undefined";
@@ -27,7 +29,10 @@ function GetClientFromBuffer(buffer, withUsername = true, setReady = true, playe
 		myId = clientID;
 		x = clientX;
 		y = clientY;
+		mySpeed = clientSpeed;
+		hp = clientHealth;
 		username = clientUsername;
+		serverHandler = server;
 		ready = setReady;
 	}
 	return newClient;

@@ -1,9 +1,10 @@
 /// @description
-buffer_seek(global.buffer, buffer_seek_start, 0);
-buffer_write(global.buffer, buffer_s8, networkCommands.send_ping);
+var buffer = buffer_create(1024, buffer_fixed, 1);
+buffer_write(buffer, buffer_s8, networkCommands.send_ping);
 var currentTime = current_time;
 show_debug_message("current time: " + string(currentTime));
-buffer_write(global.buffer, buffer_s32, currentTime);
+buffer_write(buffer, buffer_s32, currentTime);
 
-network_send_raw(socket, global.buffer, buffer_tell(global.buffer));
+network_send_raw(socket, buffer, buffer_tell(buffer));
+buffer_delete(buffer);
 alarm[0] = room_speed;
