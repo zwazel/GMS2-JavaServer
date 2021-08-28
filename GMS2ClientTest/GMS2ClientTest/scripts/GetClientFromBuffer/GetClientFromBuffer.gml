@@ -18,6 +18,9 @@ function GetClientFromBuffer(buffer, withUsername = true, setReady = true, playe
 		case PlayerTypes.host:
 			newClient = instance_create_layer(clientX, clientY,instanceLayer,obj_player_host);
 		break;
+		
+		default:
+			return noone;
 	}
 	
 	with(newClient) {
