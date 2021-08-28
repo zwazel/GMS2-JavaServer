@@ -9,7 +9,9 @@ ready = false;
 lastSendDirectionX = 0;
 lastSendDirectionY = 0;
 
-function setMyDirection(xDir, yDir) {
+function setMyDirection(xDir, yDir, posX, posY) {
+	x = posX;
+	y = posY;
 	lastSendDirectionX = xDir;
 	lastSendDirectionY = yDir;
 }

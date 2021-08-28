@@ -2,8 +2,7 @@ function GetClientFromBuffer(buffer, server, withUsername = true, setReady = tru
 	var clientID = GetIntFromBuffer(buffer);
 	var clientHealth = GetIntFromBuffer(buffer);
 	var clientSpeed = GetIntFromBuffer(buffer);
-	var clientX = GetDoubleFromBuffer(buffer);
-	var clientY = GetDoubleFromBuffer(buffer);
+	var position = GetPositionFromBuffer(buffer);
 	var clientUsername = "undefined";
 	if(withUsername) {
 		var usernameLength = GetIntFromBuffer(buffer);
@@ -14,11 +13,11 @@ function GetClientFromBuffer(buffer, server, withUsername = true, setReady = tru
 	switch(playerType) {
 		case PlayerTypes.enemy:
 		case PlayerTypes.ally:
-			newClient = instance_create_layer(clientX, clientY,instanceLayer,obj_player_client);
+			newClient = instance_create_layer(position[0], position[1], instanceLayer, obj_player_client);
 		break;
 		
 		case PlayerTypes.host:
-			newClient = instance_create_layer(clientX, clientY,instanceLayer,obj_player_host);
+			newClient = instance_create_layer(position[0], position[1], instanceLayer, obj_player_host);
 		break;
 		
 		default:
@@ -27,8 +26,8 @@ function GetClientFromBuffer(buffer, server, withUsername = true, setReady = tru
 	
 	with(newClient) {
 		myId = clientID;
-		x = clientX;
-		y = clientY;
+		x = position[0];
+		y = position[1];
 		mySpeed = clientSpeed;
 		hp = clientHealth;
 		username = clientUsername;

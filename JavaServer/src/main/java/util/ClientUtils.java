@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
-import static util.NetworkUtils.PutUtils.putClientInStream;
-import static util.NetworkUtils.PutUtils.putDirectionInStream;
+import static util.NetworkUtils.PutUtils.*;
 
 public class ClientUtils {
     public static void setDirection(Client c, List<Client> clients) throws IOException {
@@ -28,6 +27,7 @@ public class ClientUtils {
                 dOut.write(NetworkCommands.send_move_direction.ordinal());
                 dOut.writeInt(c.getMyId());
                 putDirectionInStream(dOut,c.getDirection());
+                putPositionInStream(dOut, c.getPosition());
             }
         }
     }

@@ -19,6 +19,6 @@ if(ready) {
 	}
 	
 	if(sendDirection) {
-		serverHandler.sendMoveCommand(moveHorizontal, moveVertical);
+		serverHandler.sendMoveCommand(moveHorizontal, moveVertical, x, y);
 	}
 }

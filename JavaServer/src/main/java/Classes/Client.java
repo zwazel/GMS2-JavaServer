@@ -13,8 +13,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
-import static util.NetworkUtils.GetUtils.getDirectionFromBuffer;
-import static util.NetworkUtils.GetUtils.getStringFromBuffer;
+import static util.NetworkUtils.GetUtils.*;
 
 public class Client implements Runnable {
     private SocketChannel channel;
@@ -115,10 +114,9 @@ public class Client implements Runnable {
                         break;
 
                     case get_move_direction:
-                        byte[] directions = getDirectionFromBuffer(buffer);
+                        this.direction = getDirectionFromBuffer(buffer);
 
-                        this.direction.setHorizontal(directions[0]);
-                        this.direction.setVertical(directions[1]);
+                        this.position = getPositionFromBuffer(buffer);
 
                         ClientUtils.setDirection(this, clients);
                         break;

@@ -60,11 +60,12 @@ if n_id == socket {
 				case networkCommands.get_move_direction:
 					var clientID = GetIntFromBuffer(bufferIn);
 					var directions = GetDirectionFromBuffer(bufferIn);
+					var positions = GetPositionFromBuffer(bufferIn);
 					
 					for(var i = 0; i < ds_list_size(clients); i++) {
 						var currentClient = ds_list_find_value(clients, i);
 						if(currentClient.myId == clientID) {
-							currentClient.setMyDirection(directions[0], directions[1]);
+							currentClient.setMyDirection(directions[0], directions[1], positions[0], positions[1]);
 							break;
 						}
 					}

@@ -1,13 +1,21 @@
 package util.NetworkUtils;
 
+import util.Direction;
+import util.Position;
+
 import java.nio.ByteBuffer;
 
 public class GetUtils {
-    public static byte[] getDirectionFromBuffer(ByteBuffer buffer) {
+    public static Position getPositionFromBuffer(ByteBuffer buffer) {
+        double x = buffer.getDouble();
+        double y = buffer.getDouble();
+        return new Position(x, y);
+    }
+
+    public static Direction getDirectionFromBuffer(ByteBuffer buffer) {
         byte horizontal = buffer.get();
         byte vertical = buffer.get();
-
-        return new byte[]{horizontal, vertical};
+        return new Direction(horizontal, vertical);
     }
 
     public static String getStringFromBuffer(ByteBuffer buffer, int stringLength) {

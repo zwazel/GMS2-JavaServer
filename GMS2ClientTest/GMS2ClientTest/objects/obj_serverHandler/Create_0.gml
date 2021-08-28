@@ -21,11 +21,12 @@ with(currentButton) {
 	ready = true;
 }
 
-function sendMoveCommand(dirX, dirY) {
+function sendMoveCommand(dirX, dirY, posX, posY) {
 	var buffer = buffer_create(1024, buffer_fixed, 1);
 	
 	buffer_write(buffer, buffer_s8, networkCommands.send_move_direction);
 	PutDirectionInBuffer(buffer, dirX, dirY);
+	PutPositionInBuffer(buffer, posX, posY);
 	network_send_raw(socket, buffer, buffer_tell(buffer));
 	
 	buffer_delete(buffer);
