@@ -26,8 +26,9 @@ public class ClientUtils {
                 dOut = new DataOutputStream(channel.socket().getOutputStream());
                 dOut.write(NetworkCommands.send_move_direction.ordinal());
                 dOut.writeInt(c.getMyId());
-                putDirectionInStream(dOut,c.getDirection());
+                putDirectionInStream(dOut, c.getDirection());
                 putPositionInStream(dOut, c.getPosition());
+                dOut.flush();
             }
         }
     }
@@ -48,6 +49,7 @@ public class ClientUtils {
                 }
                 putClientInStream(dOut, cc);
             }
+            dOut.flush();
         }
     }
 
