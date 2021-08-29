@@ -34,8 +34,6 @@ public class Sender implements Runnable {
             case send_ping:
                 int time = buffer.getInt();
 
-                System.out.println("time = " + time);
-
                 try {
                     dOut = new DataOutputStream(channel.socket().getOutputStream());
                     dOut.write(command.ordinal());
@@ -48,8 +46,6 @@ public class Sender implements Runnable {
             case receive_username:
                 int stringLength = buffer.getInt();
                 String username = getStringFromBuffer(buffer, stringLength);
-
-                System.out.println("username = " + username);
 
                 boolean newConnection = (client.getUsername() == null);
                 client.setUsername(username);
@@ -79,7 +75,6 @@ public class Sender implements Runnable {
                 }
                 break;
             default:
-
                 break;
         }
     }
