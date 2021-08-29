@@ -1,7 +1,6 @@
 package Classes;
 
 import GlobalStuff.NetworkCommands;
-import util.ClientUtils;
 import util.Direction;
 import util.NetworkUtils.PutUtils;
 import util.Position;
@@ -11,9 +10,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
-import java.util.List;
-
-import static util.NetworkUtils.GetUtils.*;
 
 public class Client implements Runnable {
     private SocketChannel channel;
@@ -77,53 +73,12 @@ public class Client implements Runnable {
                 buffer.position(0);
                 final byte mid = buffer.get();
 
-                List<Client> clients = server.getClients();
-                DataOutputStream dOut;
                 NetworkCommands command = NetworkCommands.getValues()[mid];
                 System.out.println("command = " + command);
-                switch (command) {
-                    case test:
-                        break;
 
-                    case send_ping:
-                        int time = buffer.getInt();
-
-                        System.out.println("time = " + time);
-
-                        dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(command.ordinal());
-                        dOut.writeInt(time);
-                        dOut.flush();
-                        break;
-                    case receive_username:
-                        int stringLength = buffer.getInt();
-                        String username = getStringFromBuffer(buffer, stringLength);
-
-                        System.out.println("username = " + username);
-
-                        boolean newConnection = (this.username == null);
-                        this.username = username;
-
-                        if (newConnection) {
-                            ClientUtils.newClientConnected(this, clients);
-
-                            ClientUtils.sendAllClientsToClient(this, clients);
-                        } else {
-                            ClientUtils.updateUsername(this, clients);
-                        }
-                        break;
-
-                    case get_move_direction:
-                        this.direction = getDirectionFromBuffer(buffer);
-
-                        this.position = getPositionFromBuffer(buffer);
-
-                        ClientUtils.setDirection(this, clients);
-                        break;
-                    default:
-                        // ...
-                        break;
-                }
+                Sender sender = new Sender(command, this, buffer);
+                Thread t = new Thread(sender);
+                t.start();
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println(channel.socket().getInetAddress().toString() + " (" + this.username + ") has disconnected.");
