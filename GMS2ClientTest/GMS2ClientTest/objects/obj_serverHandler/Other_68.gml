@@ -28,6 +28,8 @@ if n_id == socket {
 					var timeFromServer = GetIntFromBuffer(bufferIn);
 					show_debug_message("time from server: "+string(timeFromServer));
 					latency = current_time - timeFromServer;
+					
+					sendFinalPing(latency);
 					break;
 					
 				case networkCommands.client_connect:
@@ -62,12 +64,19 @@ if n_id == socket {
 					var directions = GetDirectionFromBuffer(bufferIn);
 					var positions = GetPositionFromBuffer(bufferIn);
 					
-					for(var i = 0; i < ds_list_size(clients); i++) {
-						var currentClient = ds_list_find_value(clients, i);
-						if(currentClient.myId == clientID) {
-							currentClient.setMyDirection(directions[0], directions[1], positions[0], positions[1]);
-							break;
-						}
+					var client = GetClientFromDsList(clients, clientID);
+					if(client!=noone) {
+						client.setMyDirection(directions[0], directions[1], positions[0], positions[1]);
+					}
+				break;
+				
+				case networkCommands.receive_ping_other:
+					var clientID = GetIntFromBuffer(bufferIn);
+					var ping = GetIntFromBuffer(bufferIn);
+					var client = GetClientFromDsList(clients, clientID);
+					show_debug_message("ping = " + string(ping))
+					if(client != noone) {
+						client.ping = ping;
 					}
 				break;
 				

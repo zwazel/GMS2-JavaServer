@@ -9,4 +9,5 @@ enum networkCommands {
 	get_all_clients,
 	send_move_direction,
 	get_move_direction,
+	receive_ping_other,
 }

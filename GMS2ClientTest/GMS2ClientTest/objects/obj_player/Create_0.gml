@@ -4,6 +4,7 @@ username = "undefined";
 hp = -1;
 mySpeed = -1;
 serverHandler = noone;
+ping = 0;
 ready = false;
 
 lastSendDirectionX = 0;

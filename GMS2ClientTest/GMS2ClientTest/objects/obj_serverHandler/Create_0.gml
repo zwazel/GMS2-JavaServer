@@ -32,6 +32,16 @@ function sendMoveCommand(dirX, dirY, posX, posY) {
 	buffer_delete(buffer);
 }
 
+function sendFinalPing(ping) {
+	var buffer = buffer_create(1024, buffer_fixed, 1);
+	
+	buffer_write(buffer, buffer_s8, networkCommands.receive_ping_other);
+	buffer_write(buffer, buffer_s32, ping);
+	network_send_raw(socket, buffer, buffer_tell(buffer));
+	
+	buffer_delete(buffer);
+}
+
 function buttonPressed(button) {
 	switch(button.cmd) {
 		case buttonCommands.connect_to_server:

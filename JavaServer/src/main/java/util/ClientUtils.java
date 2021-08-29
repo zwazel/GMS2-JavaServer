@@ -77,14 +77,31 @@ public class ClientUtils {
         SocketChannel channel;
         DataOutputStream dOut;
         for (Client c : clients) {
-            channel = c.getChannel();
             if (c.getMyId() == client.getMyId()) {
                 continue;
             }
+            channel = c.getChannel();
 
             dOut = new DataOutputStream(channel.socket().getOutputStream());
             dOut.write(NetworkCommands.client_connect.ordinal());
             putClientInStream(dOut, client);
+            dOut.flush();
+        }
+    }
+
+    public static void sendPingToEveryone(Client c, List<Client> clients, int ping) throws IOException {
+        SocketChannel channel;
+        DataOutputStream dOut;
+        for (Client cc : clients) {
+            if (c.getMyId() == cc.getMyId()) {
+                continue;
+            }
+            channel = cc.getChannel();
+
+            dOut = new DataOutputStream(channel.socket().getOutputStream());
+            dOut.write(NetworkCommands.send_ping_other.ordinal());
+            dOut.writeInt(c.getMyId());
+            dOut.writeInt(ping);
             dOut.flush();
         }
     }

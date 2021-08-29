@@ -43,6 +43,14 @@ public class Sender implements Runnable {
                     e.printStackTrace();
                 }
                 break;
+            case send_ping_other:
+                int ping = buffer.getInt();
+                try {
+                    ClientUtils.sendPingToEveryone(this.client, clients, ping);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
             case receive_username:
                 int stringLength = buffer.getInt();
                 String username = getStringFromBuffer(buffer, stringLength);

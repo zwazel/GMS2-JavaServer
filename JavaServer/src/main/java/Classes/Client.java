@@ -66,6 +66,7 @@ public class Client implements Runnable {
             try {
                 final int bufferSize = 1024;
                 buffer = ByteBuffer.allocate(bufferSize);
+                
                 channel.read(buffer);   // fill buffer from the input stream
 
                 buffer.order(ByteOrder.LITTLE_ENDIAN);

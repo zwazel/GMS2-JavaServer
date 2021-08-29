@@ -17,6 +17,7 @@
     {"id":{"name":"GetLongFromBuffer","path":"scripts/GetLongFromBuffer/GetLongFromBuffer.yy",},"order":3,},
     {"id":{"name":"obj_player_host","path":"objects/obj_player_host/obj_player_host.yy",},"order":5,},
     {"id":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},"order":3,},
+    {"id":{"name":"GetClientFromDsList","path":"scripts/GetClientFromDsList/GetClientFromDsList.yy",},"order":3,},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},"order":4,},
     {"id":{"name":"GetPositionFromBuffer","path":"scripts/GetPositionFromBuffer/GetPositionFromBuffer.yy",},"order":6,},
     {"id":{"name":"PlayerBehaviour","path":"scripts/PlayerBehaviour/PlayerBehaviour.yy",},"order":3,},
