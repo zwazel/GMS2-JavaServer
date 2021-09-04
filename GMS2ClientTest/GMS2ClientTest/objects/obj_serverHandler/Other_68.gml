@@ -6,6 +6,7 @@ if n_id == socket {
 	var t = ds_map_find_value(async_load, "type");
     switch(t) {
         case network_type_data:
+			receivedPackages++;
 			show_debug_message(json_encode(async_load));
 		
 			var bufferIn = ds_map_find_value(async_load, "buffer");

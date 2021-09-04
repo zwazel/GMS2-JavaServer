@@ -7,6 +7,8 @@ latency = 0;
 socket = noone;
 clients = ds_list_create();
 mePlayer = noone;
+sentPackages = 0;
+receivedPackages = 0;
 
 with(inputManager) {
 	other.ipInput = addTextInputBox(room_width/2, room_height/2-32,128, "IP of Server", "gui", "127.0.0.1");
@@ -28,6 +30,7 @@ function sendMoveCommand(dirX, dirY, posX, posY) {
 	PutDirectionInBuffer(buffer, dirX, dirY);
 	PutPositionInBuffer(buffer, posX, posY);
 	network_send_raw(socket, buffer, buffer_tell(buffer));
+	sentPackages++;
 	
 	buffer_delete(buffer);
 }
@@ -38,6 +41,7 @@ function sendFinalPing(ping) {
 	buffer_write(buffer, buffer_s8, networkCommands.receive_ping_other);
 	buffer_write(buffer, buffer_s32, ping);
 	network_send_raw(socket, buffer, buffer_tell(buffer));
+	sentPackages++;
 	
 	buffer_delete(buffer);
 }
@@ -90,6 +94,7 @@ function buttonPressed(button) {
 					buffer_write(buffer, buffer_string, username);
 
 					network_send_raw(socket, buffer, buffer_tell(buffer));
+					sentPackages++;
 					
 					mePlayer.username = username;
 					mePlayer.ready = true;
