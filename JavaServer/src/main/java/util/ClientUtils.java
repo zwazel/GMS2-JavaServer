@@ -11,6 +11,11 @@ import java.util.List;
 import static util.NetworkUtils.PutUtils.*;
 
 public class ClientUtils {
+    public static void sendDataOut(Client c, DataOutputStream dOut) throws IOException {
+        dOut.flush();
+        c.increaseSentPackages(1);
+    }
+
     public static void setDirection(Client c, List<Client> clients) throws IOException {
         int clientSize = clients.size();
         if (clientSize > 1) {
@@ -28,7 +33,7 @@ public class ClientUtils {
                 dOut.writeInt(c.getMyId());
                 putDirectionInStream(dOut, c.getDirection());
                 putPositionInStream(dOut, c.getPosition());
-                dOut.flush();
+                sendDataOut(cc, dOut);
             }
         }
     }
@@ -49,7 +54,7 @@ public class ClientUtils {
                 }
                 putClientInStream(dOut, cc);
             }
-            dOut.flush();
+            sendDataOut(c, dOut);
         }
     }
 
@@ -65,7 +70,7 @@ public class ClientUtils {
             dOut = new DataOutputStream(channel.socket().getOutputStream());
             dOut.write(NetworkCommands.client_disconnect.ordinal());
             dOut.writeInt(c.getMyId());
-            dOut.flush();
+            sendDataOut(cc, dOut);
         }
     }
 
@@ -85,7 +90,7 @@ public class ClientUtils {
             dOut = new DataOutputStream(channel.socket().getOutputStream());
             dOut.write(NetworkCommands.client_connect.ordinal());
             putClientInStream(dOut, client);
-            dOut.flush();
+            sendDataOut(c, dOut);
         }
     }
 
@@ -102,7 +107,7 @@ public class ClientUtils {
             dOut.write(NetworkCommands.send_ping_other.ordinal());
             dOut.writeInt(c.getMyId());
             dOut.writeInt(ping);
-            dOut.flush();
+            sendDataOut(cc, dOut);
         }
     }
 }

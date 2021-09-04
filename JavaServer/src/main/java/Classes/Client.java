@@ -21,6 +21,9 @@ public class Client implements Runnable {
     private int speed;
     private int health;
     private Direction direction = new Direction();
+    private long sentPackages = 0;
+    private long receivedPackages = 0;
+    private long ping;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -66,8 +69,10 @@ public class Client implements Runnable {
             try {
                 final int bufferSize = 1024;
                 buffer = ByteBuffer.allocate(bufferSize);
-                
+
                 channel.read(buffer);   // fill buffer from the input stream
+
+                increaseReceivedPackages(1);
 
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -80,6 +85,8 @@ public class Client implements Runnable {
                 Sender sender = new Sender(command, this, buffer);
                 Thread t = new Thread(sender);
                 t.start();
+
+                System.out.println(getInfos());
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println(channel.socket().getInetAddress().toString() + " (" + this.username + ") has disconnected.");
@@ -92,6 +99,10 @@ public class Client implements Runnable {
                 }
             }
         }
+    }
+
+    public String getInfos() {
+        return (this.getMyId() + "{" + this.getUsername() + "},ping{" + this.getPing() + "},sent/received{" + this.getSentPackages() + "," + this.getReceivedPackages() + "}");
     }
 
     public SocketChannel getChannel() {
@@ -164,5 +175,40 @@ public class Client implements Runnable {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public long getSentPackages() {
+        return sentPackages;
+    }
+
+    public void setSentPackages(long sentPackages) {
+        this.sentPackages = sentPackages;
+    }
+
+    public void increaseSentPackages(long amount) {
+        System.out.println("increase");
+        this.sentPackages += amount;
+        this.server.increaseSentPackages(amount);
+    }
+
+    public long getReceivedPackages() {
+        return receivedPackages;
+    }
+
+    public void setReceivedPackages(long receivedPackages) {
+        this.receivedPackages = receivedPackages;
+    }
+
+    public void increaseReceivedPackages(long amount) {
+        this.receivedPackages += amount;
+        this.server.increaseReceivedPackages(amount);
+    }
+
+    public long getPing() {
+        return ping;
+    }
+
+    public void setPing(long ping) {
+        this.ping = ping;
     }
 }

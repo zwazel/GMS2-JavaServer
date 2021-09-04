@@ -15,6 +15,8 @@ public class Server {
     private boolean running;
     private Position startPosition;
     private int idCounter = 0;
+    private long sentPackages = 0;
+    private long receivedPackages = 0;
 
     public Server(int port) {
         this.clients = new ArrayList<>();
@@ -37,7 +39,6 @@ public class Server {
             running = false;
         }
 
-        // Server loop
         while (running) {
             try {
                 // Check for new connections
@@ -58,6 +59,13 @@ public class Server {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    public void printClientInfos() {
+        System.out.println("currently connected clients: " + this.clients.size());
+        for (Client c : this.clients) {
+            System.out.println(c.getInfos());
         }
     }
 
@@ -100,6 +108,38 @@ public class Server {
 
     public void setIdCounter(int idCounter) {
         this.idCounter = idCounter;
+    }
+
+    public Position getStartPosition() {
+        return startPosition;
+    }
+
+    public void setStartPosition(Position startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public long getSentPackages() {
+        return sentPackages;
+    }
+
+    public void setSentPackages(long sentPackages) {
+        this.sentPackages = sentPackages;
+    }
+
+    public void increaseSentPackages(long amount) {
+        this.sentPackages += amount;
+    }
+
+    public long getReceivedPackages() {
+        return receivedPackages;
+    }
+
+    public void setReceivedPackages(long receivedPackages) {
+        this.receivedPackages = receivedPackages;
+    }
+
+    public void increaseReceivedPackages(long amount) {
+        this.receivedPackages += amount;
     }
 
     public static void main(String... args) {

@@ -38,7 +38,7 @@ public class Sender implements Runnable {
                     dOut = new DataOutputStream(channel.socket().getOutputStream());
                     dOut.write(command.ordinal());
                     dOut.writeInt(time);
-                    dOut.flush();
+                    ClientUtils.sendDataOut(client, dOut);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -46,6 +46,7 @@ public class Sender implements Runnable {
             case send_ping_other:
                 int ping = buffer.getInt();
                 try {
+                    client.setPing(ping);
                     ClientUtils.sendPingToEveryone(this.client, clients, ping);
                 } catch (IOException e) {
                     e.printStackTrace();
