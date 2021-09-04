@@ -11,7 +11,8 @@ public enum NetworkCommands {
     send_all_clients,
     get_move_direction,
     send_move_direction,
-    send_ping_other;
+    send_ping_other,
+    end_of_packet;
 
     private static final NetworkCommands[] values = values();
 

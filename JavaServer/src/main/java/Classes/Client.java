@@ -46,6 +46,8 @@ public class Client implements Runnable {
         this.position = position;
         this.server = server;
         this.channel = channel;
+        this.speed = speed;
+        this.health = health;
 
         try {
             initClientThroughNetwork();
@@ -65,26 +67,26 @@ public class Client implements Runnable {
     @Override
     public void run() {
         while (connected) {
-            ByteBuffer buffer;
             try {
-                final int bufferSize = 1024;
-                buffer = ByteBuffer.allocate(bufferSize);
-
+                final int bufferSize = 64;
+                ByteBuffer buffer = ByteBuffer.allocate(bufferSize);
                 channel.read(buffer);   // fill buffer from the input stream
-
-                increaseReceivedPackages(1);
-
                 buffer.order(ByteOrder.LITTLE_ENDIAN);
-
                 buffer.position(0);
-                final byte mid = buffer.get();
 
-                NetworkCommands command = NetworkCommands.getValues()[mid];
-                System.out.println("command = " + command);
+                final int receivedBufferSize = buffer.getInt();
+                System.out.println("receivedBufferSize = " + receivedBufferSize);
 
-                Sender sender = new Sender(command, this, buffer);
+                ByteBuffer bufferWithActualStuff = ByteBuffer.allocate(bufferSize);
+                channel.read(bufferWithActualStuff);   // fill buffer from the input stream
+                bufferWithActualStuff.order(ByteOrder.LITTLE_ENDIAN);
+                bufferWithActualStuff.position(0);
+
+                Sender sender = new Sender(bufferWithActualStuff, this);
                 Thread t = new Thread(sender);
                 t.start();
+
+                increaseReceivedPackages(2);
 
                 System.out.println(getInfos());
             } catch (IOException ex) {
@@ -102,7 +104,11 @@ public class Client implements Runnable {
     }
 
     public String getInfos() {
-        return (this.getMyId() + "{" + this.getUsername() + "},ping{" + this.getPing() + "},sent/received{" + this.getSentPackages() + "," + this.getReceivedPackages() + "}");
+        return (this.getMyId() + "{" + this.getUsername() +
+                "},ping{" + this.getPing() +
+                "},sent/received{" + this.getSentPackages() + "," + this.getReceivedPackages() +
+                "}," + this.direction +
+                "," + this.position);
     }
 
     public SocketChannel getChannel() {
@@ -186,7 +192,6 @@ public class Client implements Runnable {
     }
 
     public void increaseSentPackages(long amount) {
-        System.out.println("increase");
         this.sentPackages += amount;
         this.server.increaseSentPackages(amount);
     }

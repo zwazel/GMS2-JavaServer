@@ -10,4 +10,5 @@ enum networkCommands {
 	send_move_direction,
 	get_move_direction,
 	receive_ping_other,
+	end_of_packet,
 }

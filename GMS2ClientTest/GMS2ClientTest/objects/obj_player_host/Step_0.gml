@@ -8,17 +8,9 @@ if(ready) {
 	
 	if(lastSendDirectionX != moveHorizontal) {
 		lastSendDirectionX = moveHorizontal;
-		
-		sendDirection = true;
 	}
 	
 	if(lastSendDirectionY != moveVertical) {
 		lastSendDirectionY = moveVertical;
-		
-		sendDirection = true;
-	}
-	
-	if(sendDirection) {
-		serverHandler.sendMoveCommand(moveHorizontal, moveVertical, x, y);
 	}
 }
