@@ -9,6 +9,8 @@ clients = ds_list_create();
 mePlayer = noone;
 sentPackages = 0;
 receivedPackages = 0;
+packageSenderTimerTime = room_speed / 6;
+myBuffer = buffer_create(16,buffer_grow,1);
 
 with(inputManager) {
 	other.ipInput = addTextInputBox(room_width/2, room_height/2-32,128, "IP of Server", "gui", "127.0.0.1");
@@ -24,26 +26,14 @@ with(currentButton) {
 }
 
 function sendMoveCommand(dirX, dirY, posX, posY) {
-	var buffer = buffer_create(1024, buffer_fixed, 1);
-	
-	buffer_write(buffer, buffer_s8, networkCommands.send_move_direction);
-	PutDirectionInBuffer(buffer, dirX, dirY);
-	PutPositionInBuffer(buffer, posX, posY);
-	network_send_raw(socket, buffer, buffer_tell(buffer));
-	sentPackages++;
-	
-	buffer_delete(buffer);
+	buffer_write(myBuffer, buffer_s8, networkCommands.send_move_direction);
+	PutDirectionInBuffer(myBuffer, dirX, dirY);
+	PutPositionInBuffer(myBuffer, posX, posY);
 }
 
-function sendFinalPing(ping) {
-	var buffer = buffer_create(1024, buffer_fixed, 1);
-	
-	buffer_write(buffer, buffer_s8, networkCommands.receive_ping_other);
-	buffer_write(buffer, buffer_s32, ping);
-	network_send_raw(socket, buffer, buffer_tell(buffer));
-	sentPackages++;
-	
-	buffer_delete(buffer);
+function sendFinalPing(ping) {	
+	buffer_write(myBuffer, buffer_s8, networkCommands.receive_ping_other);
+	buffer_write(myBuffer, buffer_s32, ping);
 }
 
 function buttonPressed(button) {
@@ -59,7 +49,7 @@ function buttonPressed(button) {
 			} else {
 				// connected
 				show_debug_message("connected");
-				alarm[0] = room_speed;
+				alarm[0] = packageSenderTimerTime;
 		
 				with(button) {
 					instance_destroy();
@@ -83,25 +73,19 @@ function buttonPressed(button) {
 		
 		case buttonCommands.set_username:
 			if(usernameInput.text != "") {
-					var buffer = buffer_create(1024, buffer_fixed, 1);
-					buffer_seek(buffer, buffer_seek_start, 0);
-					buffer_write(buffer, buffer_s8, networkCommands.send_username);
+					buffer_write(myBuffer, buffer_s8, networkCommands.send_username);
 					
 					var username = usernameInput.text
 					var usernameLength = string_length(username);
-					buffer_write(buffer, buffer_s32, usernameLength);
+					buffer_write(myBuffer, buffer_s32, usernameLength);
 					show_debug_message("username: " + username);
-					buffer_write(buffer, buffer_string, username);
-
-					network_send_raw(socket, buffer, buffer_tell(buffer));
-					sentPackages++;
+					buffer_write(myBuffer, buffer_text, username);
 					
 					mePlayer.username = username;
 					mePlayer.ready = true;
 					
 					instance_destroy(usernameInput);
 					instance_destroy(currentButton);
-					buffer_delete(buffer);
 			}
 			break;
 	}

@@ -53,6 +53,7 @@ public class Server {
                     t.start();
 
                     clients.add(c);
+                    System.out.println("NEW CLIENT! clients.size() = " + clients.size());
                 }
 
             } catch (IOException e) {

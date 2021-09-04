@@ -17,8 +17,6 @@ if n_id == socket {
   
 		    switch (messageId) {
 				case networkCommands.test:
-					var long = GetDoubleFromBuffer(bufferIn);
-					show_debug_message(string(long));
 				break;
 				
 				case networkCommands.receive_my_id:
@@ -27,13 +25,13 @@ if n_id == socket {
 				
 				case networkCommands.send_ping:
 					var timeFromServer = GetIntFromBuffer(bufferIn);
-					show_debug_message("time from server: "+string(timeFromServer));
 					latency = current_time - timeFromServer;
 					
 					sendFinalPing(latency);
 					break;
 					
 				case networkCommands.client_connect:
+				show_debug_message("NEW CLIENT");
 					var newClient = GetClientFromBuffer(bufferIn, id);
 					ds_list_add(clients, newClient);
 				break;
@@ -75,7 +73,6 @@ if n_id == socket {
 					var clientID = GetIntFromBuffer(bufferIn);
 					var ping = GetIntFromBuffer(bufferIn);
 					var client = GetClientFromDsList(clients, clientID);
-					show_debug_message("ping = " + string(ping))
 					if(client != noone) {
 						client.ping = ping;
 					}

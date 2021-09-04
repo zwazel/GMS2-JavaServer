@@ -12,12 +12,10 @@ import java.util.List;
 import static util.NetworkUtils.GetUtils.*;
 
 public class Sender implements Runnable {
-    NetworkCommands command;
-    Client client;
-    ByteBuffer buffer;
+    private final Client client;
+    private final ByteBuffer buffer;
 
-    public Sender(NetworkCommands command, Client client, ByteBuffer buffer) {
-        this.command = command;
+    public Sender(ByteBuffer buffer, Client client) {
         this.client = client;
         this.buffer = buffer;
     }
@@ -27,64 +25,74 @@ public class Sender implements Runnable {
         DataOutputStream dOut;
         SocketChannel channel = client.getChannel();
         List<Client> clients = client.getServer().getClients();
-        switch (command) {
-            case test:
-                break;
 
-            case send_ping:
-                int time = buffer.getInt();
+        loopThroughBuffer:
+        while (buffer.hasRemaining()) {
+            final byte commandByte = buffer.get();
 
-                try {
-                    dOut = new DataOutputStream(channel.socket().getOutputStream());
-                    dOut.write(command.ordinal());
-                    dOut.writeInt(time);
-                    ClientUtils.sendDataOut(client, dOut);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case send_ping_other:
-                int ping = buffer.getInt();
-                try {
-                    client.setPing(ping);
-                    ClientUtils.sendPingToEveryone(this.client, clients, ping);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case receive_username:
-                int stringLength = buffer.getInt();
-                String username = getStringFromBuffer(buffer, stringLength);
+            final NetworkCommands command = NetworkCommands.getValues()[commandByte];
+            System.out.println(client.getUsername() + ", command = " + command);
 
-                boolean newConnection = (client.getUsername() == null);
-                client.setUsername(username);
+            switch (command) {
+                case test:
+                    break;
 
-                try {
-                    if (newConnection) {
-                        ClientUtils.newClientConnected(client, clients);
+                case send_ping:
+                    int time = buffer.getInt();
 
-                        ClientUtils.sendAllClientsToClient(client, clients);
-                    } else {
-                        ClientUtils.updateUsername(client, clients);
+                    try {
+                        dOut = new DataOutputStream(channel.socket().getOutputStream());
+                        dOut.write(command.ordinal());
+                        dOut.writeInt(time);
+                        dOut.flush();
+                        client.increaseSentPackages(1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
+                    break;
+                case send_ping_other:
+                    int ping = buffer.getInt();
+                    try {
+                        client.setPing(ping);
+                        ClientUtils.sendPingToEveryone(this.client, clients, ping);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case receive_username:
+                    int stringLength = buffer.getInt();
+                    String username = getStringFromBuffer(buffer, stringLength);
 
-            case get_move_direction:
-                try {
-                    client.setDirection(getDirectionFromBuffer(buffer));
+                    boolean newConnection = (client.getUsername() == null);
+                    client.setUsername(username);
 
-                    client.setPosition(getPositionFromBuffer(buffer));
+                    try {
+                        if (newConnection) {
+                            ClientUtils.newClientConnected(client, clients);
 
-                    ClientUtils.setDirection(client, clients);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                break;
+                            ClientUtils.sendAllClientsToClient(client, clients);
+                        } else {
+                            ClientUtils.updateUsername(client, clients);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                case get_move_direction:
+                    try {
+                        client.setDirection(getDirectionFromBuffer(buffer));
+
+                        client.setPosition(getPositionFromBuffer(buffer));
+
+                        ClientUtils.setDirection(client, clients);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    break loopThroughBuffer;
+            }
         }
     }
 }
