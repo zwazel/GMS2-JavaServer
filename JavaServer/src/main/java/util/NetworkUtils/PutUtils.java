@@ -37,13 +37,12 @@ public class PutUtils {
         try {
             dOut.writeInt(c.getMyId()); // ID
             boolean withUsername = ((c.getUsername() != null) && init);
-            System.out.println("withUsername = " + withUsername);
             dOut.writeBoolean(withUsername);
             if (withUsername) {
                 putStringInStream(dOut, c.getUsername());
             }
             dOut.writeInt(c.getHealth()); // Health
-            if(init) {
+            if (init) {
                 dOut.writeInt(c.getSpeed());
             } else {
                 dOut.writeInt(c.getPing());

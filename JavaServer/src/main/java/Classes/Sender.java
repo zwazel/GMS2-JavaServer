@@ -21,7 +21,7 @@ public record Sender(Server server) implements Runnable {
                     if (clientReceiver.isReady()) {
                         ArrayList<Client> clientsReady = new ArrayList<>();
                         for (Client c : clients) {
-                            if (c.isReady() && (clientReceiver.getMyId() == c.getMyId())) clientsReady.add(c);
+                            if (c.isReady() && (clientReceiver.getMyId() != c.getMyId())) clientsReady.add(c);
                         }
 
                         if (clientsReady.size() > 0) {

@@ -34,7 +34,7 @@ public class Client implements Runnable {
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
         this.position = position;
-        this.direction = new Direction((byte) 0,(byte) 0);
+        this.direction = new Direction((byte) 0, (byte) 0);
         this.server = server;
         this.channel = channel;
 
@@ -140,6 +140,25 @@ public class Client implements Runnable {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "channel=" + channel +
+                ", connected=" + connected +
+                ", server=" + server +
+                ", myId=" + myId +
+                ", username='" + username + '\'' +
+                ", position=" + position +
+                ", speed=" + speed +
+                ", health=" + health +
+                ", direction=" + direction +
+                ", sentPackages=" + sentPackages +
+                ", receivedPackages=" + receivedPackages +
+                ", ping=" + ping +
+                ", ready=" + ready +
+                '}';
     }
 
     public String getInfos() {

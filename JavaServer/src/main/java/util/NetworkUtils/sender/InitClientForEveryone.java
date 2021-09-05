@@ -31,19 +31,19 @@ public record InitClientForEveryone(Client newClient) implements Runnable {
             e.printStackTrace();
         }
 
-//        // send new client to everyone
-//        for (Client client : clients) {
-//            if (client.getMyId() == newClient().getMyId()) {
-//                continue;
-//            }
-//            try {
-//                dOut = new DataOutputStream(client.getChannel().socket().getOutputStream());
-//                dOut.write(NetworkCommands.client_connect.ordinal());
-//                putClientInStream(dOut, newClient, true);
-//                dOut.flush();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        // send new client to everyone
+        for (Client client : clients) {
+            if (client.getMyId() == newClient().getMyId()) {
+                continue;
+            }
+            try {
+                dOut = new DataOutputStream(client.getChannel().socket().getOutputStream());
+                dOut.write(NetworkCommands.client_connect.ordinal());
+                putClientInStream(dOut, newClient, true);
+                dOut.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
