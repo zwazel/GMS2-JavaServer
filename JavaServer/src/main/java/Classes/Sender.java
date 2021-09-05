@@ -2,6 +2,8 @@ package Classes;
 
 import GlobalStuff.NetworkCommands;
 import util.ClientUtils;
+import util.NetworkUtils.sender.InitClientForEveryone;
+import util.NetworkUtils.sender.SendPing;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,8 +16,6 @@ import static util.NetworkUtils.GetUtils.*;
 public record Sender(ByteBuffer buffer, Client client) implements Runnable {
     @Override
     public void run() {
-        DataOutputStream dOut;
-        SocketChannel channel = client.getChannel();
         List<Client> clients = client.getServer().getClients();
 
         loopThroughBuffer:
@@ -51,9 +51,9 @@ public record Sender(ByteBuffer buffer, Client client) implements Runnable {
 
                     try {
                         if (newConnection) {
-                            ClientUtils.newClientConnected(client, clients);
-
-                            ClientUtils.sendAllClientsToClient(client, clients);
+                            InitClientForEveryone initClientForEveryone = new InitClientForEveryone(client);
+                            t = new Thread(initClientForEveryone);
+                            t.start();
                         } else {
                             ClientUtils.updateUsername(client, clients);
                         }

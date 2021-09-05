@@ -48,7 +48,7 @@ public class ClientUtils {
                 if (cc.getMyId() == c.getMyId()) {
                     continue;
                 }
-                putClientInStream(dOut, cc);
+                putClientInStream(dOut, cc, true);
             }
             dOut.flush();
             c.increaseSentPackages(1);
@@ -87,7 +87,7 @@ public class ClientUtils {
 
             dOut = new DataOutputStream(channel.socket().getOutputStream());
             dOut.write(NetworkCommands.client_connect.ordinal());
-            putClientInStream(dOut, client);
+            putClientInStream(dOut, client, true);
             dOut.flush();
             c.increaseSentPackages(1);
         }

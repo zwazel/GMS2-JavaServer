@@ -20,7 +20,7 @@ if n_id == socket {
 				break;
 				
 				case networkCommands.receive_my_id:
-					mePlayer = GetClientFromBuffer(bufferIn, id, false, false, PlayerTypes.host);
+					mePlayer = InitClientFromBuffer(bufferIn, id, false, PlayerTypes.host);
 				break;
 				
 				case networkCommands.send_ping:
@@ -32,14 +32,14 @@ if n_id == socket {
 					
 				case networkCommands.client_connect:
 				show_debug_message("NEW CLIENT");
-					var newClient = GetClientFromBuffer(bufferIn, id);
+					var newClient = InitClientFromBuffer(bufferIn, id);
 					ds_list_add(clients, newClient);
 				break;
 					
 				case networkCommands.get_all_clients:
 					var amountClients = GetIntFromBuffer(bufferIn);
 					for(var i = 0; i < amountClients; i++) {
-						var newClient = GetClientFromBuffer(bufferIn, id);
+						var newClient = InitClientFromBuffer(bufferIn, id);
 						ds_list_add(clients, newClient);
 					}
 				break;

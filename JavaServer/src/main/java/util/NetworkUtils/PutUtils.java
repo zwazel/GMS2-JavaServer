@@ -23,6 +23,9 @@ public class PutUtils {
     }
 
     public static void putStringInStream(DataOutputStream dOut, String s) throws IOException {
+        if (s == null) {
+            s = "undefinedFromServer";
+        }
         char[] chars = s.toCharArray();
         dOut.writeInt(chars.length);
         for (char c : chars) {
@@ -30,21 +33,23 @@ public class PutUtils {
         }
     }
 
-    public static void putClientInStream(DataOutputStream dOut, Client c, boolean withUsername) {
+    public static void putClientInStream(DataOutputStream dOut, Client c, boolean init) {
         try {
-            dOut.writeInt(c.getMyId());
-            dOut.writeInt(c.getHealth());
-            dOut.writeInt(c.getSpeed());
-            putPositionInStream(dOut, c.getPosition());
+            dOut.writeInt(c.getMyId()); // ID
+            boolean withUsername = ((c.getUsername() != null) && init);
+            System.out.println("withUsername = " + withUsername);
+            dOut.write((withUsername) ? 1 : 0);
             if (withUsername) {
                 putStringInStream(dOut, c.getUsername());
             }
+            dOut.writeInt(c.getHealth()); // Health
+            if(init) {
+                dOut.writeInt(c.getSpeed());
+            }
+            putPositionInStream(dOut, c.getPosition()); // Position
+            putDirectionInStream(dOut, c.getDirection()); // Direction
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void putClientInStream(DataOutputStream dOut, Client c) {
-        putClientInStream(dOut, c, (c.getUsername() == null));
     }
 }

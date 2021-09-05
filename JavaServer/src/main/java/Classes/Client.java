@@ -28,17 +28,12 @@ public class Client implements Runnable {
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
         this.position = position;
+        this.direction = new Direction((byte) 0,(byte) 0);
         this.server = server;
         this.channel = channel;
 
         this.health = 100;
         this.speed = 3;
-
-        try {
-            initClientThroughNetwork();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public Client(int id, int speed, int health, Position position, Server server, SocketChannel channel) {
@@ -48,12 +43,6 @@ public class Client implements Runnable {
         this.channel = channel;
         this.speed = speed;
         this.health = health;
-
-        try {
-            initClientThroughNetwork();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initClientThroughNetwork() throws IOException {

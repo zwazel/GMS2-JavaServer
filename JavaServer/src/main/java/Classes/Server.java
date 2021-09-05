@@ -1,6 +1,8 @@
 package Classes;
 
 import util.ClientUtils;
+import util.NetworkUtils.sender.InitClient;
+import util.NetworkUtils.sender.InitClientForEveryone;
 import util.Position;
 
 import java.io.IOException;
@@ -50,6 +52,10 @@ public class Server {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
                     Client c = new Client(idCounter++, startPosition, this, newChannel);
                     Thread t = new Thread(c);
+                    t.start();
+
+                    InitClient initClient = new InitClient(c);
+                    t = new Thread(initClient);
                     t.start();
 
                     clients.add(c);

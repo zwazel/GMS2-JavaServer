@@ -1,5 +1,7 @@
-package Classes;
+package util.NetworkUtils.sender;
 
+import Classes.Client;
+import Classes.Server;
 import GlobalStuff.NetworkCommands;
 
 import java.io.DataOutputStream;
@@ -7,26 +9,13 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 
-public class SendPing implements Runnable {
-    private final Server server;
-    private final Client client;
-    private SocketChannel channel;
-    private final int time;
-    private final boolean toEveryone;
-
-    public SendPing(Server server, Client client, int time, boolean toEveryone) {
-        this.server = server;
-        this.client = client;
-        this.channel = client.getChannel();
-        this.time = time;
-        this.toEveryone = toEveryone;
-    }
-
+public record SendPing(Server server, Client client, int time, boolean toEveryone) implements Runnable {
     @Override
     public void run() {
         DataOutputStream dOut;
+        SocketChannel channel;
         try {
-            if(toEveryone) {
+            if (toEveryone) {
                 List<Client> clients = server.getClients();
                 for (Client cc : clients) {
                     if (client.getMyId() == cc.getMyId()) {
@@ -42,6 +31,7 @@ public class SendPing implements Runnable {
                     cc.increaseSentPackages(1);
                 }
             } else {
+                channel = client.getChannel();
                 dOut = new DataOutputStream(channel.socket().getOutputStream());
                 dOut.write(NetworkCommands.send_ping.ordinal());
                 dOut.writeInt(time);
@@ -51,17 +41,5 @@ public class SendPing implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public int getTime() {
-        return time;
     }
 }
