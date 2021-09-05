@@ -38,7 +38,7 @@ public class PutUtils {
             dOut.writeInt(c.getMyId()); // ID
             boolean withUsername = ((c.getUsername() != null) && init);
             System.out.println("withUsername = " + withUsername);
-            dOut.write((withUsername) ? 1 : 0);
+            dOut.writeBoolean(withUsername);
             if (withUsername) {
                 putStringInStream(dOut, c.getUsername());
             }

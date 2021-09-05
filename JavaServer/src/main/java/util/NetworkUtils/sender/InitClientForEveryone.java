@@ -19,6 +19,7 @@ public record InitClientForEveryone(Client newClient) implements Runnable {
             // Send every already connected client to the new client
             dOut = new DataOutputStream(newClient.getChannel().socket().getOutputStream());
             dOut.write(NetworkCommands.send_all_clients.ordinal());
+            dOut.writeInt(clients.size()-1);
             for (Client client : clients) {
                 if (client.getMyId() == newClient().getMyId()) {
                     continue;
@@ -30,19 +31,19 @@ public record InitClientForEveryone(Client newClient) implements Runnable {
             e.printStackTrace();
         }
 
-        // send new client to everyone
-        for (Client client : clients) {
-            if (client.getMyId() == newClient().getMyId()) {
-                continue;
-            }
-            try {
-                dOut = new DataOutputStream(client.getChannel().socket().getOutputStream());
-                dOut.write(NetworkCommands.client_connect.ordinal());
-
-                dOut.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        // send new client to everyone
+//        for (Client client : clients) {
+//            if (client.getMyId() == newClient().getMyId()) {
+//                continue;
+//            }
+//            try {
+//                dOut = new DataOutputStream(client.getChannel().socket().getOutputStream());
+//                dOut.write(NetworkCommands.client_connect.ordinal());
+//                putClientInStream(dOut, newClient, true);
+//                dOut.flush();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

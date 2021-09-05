@@ -27,17 +27,19 @@ if n_id == socket {
 					var timeFromServer = GetIntFromBuffer(bufferIn);
 					latency = current_time - timeFromServer;
 					mePlayer.ping = latency;
-					show_debug_message("meplayerping = " + string(mePlayer.ping));
+					show_debug_message("mePlayerPing = " + string(mePlayer.ping));
 					break;
 					
 				case networkCommands.client_connect:
-				show_debug_message("NEW CLIENT");
+					show_debug_message("NEW CLIENT");
 					var newClient = InitClientFromBuffer(bufferIn, id);
 					ds_list_add(clients, newClient);
 				break;
 					
 				case networkCommands.get_all_clients:
+					show_debug_message("GETTING ALL CLIENTS");
 					var amountClients = GetIntFromBuffer(bufferIn);
+					show_debug_message("AMOUNT CLIENTS = " +string(amountClients));
 					for(var i = 0; i < amountClients; i++) {
 						var newClient = InitClientFromBuffer(bufferIn, id);
 						ds_list_add(clients, newClient);

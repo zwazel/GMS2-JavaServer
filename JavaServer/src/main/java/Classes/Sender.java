@@ -1,14 +1,10 @@
 package Classes;
 
 import GlobalStuff.NetworkCommands;
-import util.ClientUtils;
 import util.NetworkUtils.sender.InitClientForEveryone;
 import util.NetworkUtils.sender.SendPing;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.List;
 
 import static util.NetworkUtils.GetUtils.*;
@@ -33,14 +29,16 @@ public record Sender(ByteBuffer buffer, Client client) implements Runnable {
 
                 case send_ping:
                     sP = new SendPing(client.getServer(), client, buffer.getInt(), false);
-                    t = new Thread(sP);
-                    t.start();
+                    sP.run();
+//                    t = new Thread(sP);
+//                    t.start();
                     break;
                 case send_ping_other:
                     client.setPing(buffer.getInt());
                     sP = new SendPing(client.getServer(), client, client.getPing(), true);
-                    t = new Thread(sP);
-                    t.start();
+                    sP.run();
+//                    t = new Thread(sP);
+//                    t.start();
                     break;
                 case receive_username:
                     int stringLength = buffer.getInt();
@@ -49,29 +47,24 @@ public record Sender(ByteBuffer buffer, Client client) implements Runnable {
                     boolean newConnection = (client.getUsername() == null);
                     client.setUsername(username);
 
-                    try {
-                        if (newConnection) {
+                    if (newConnection) {
+                        if (clients.size() > 1) {
                             InitClientForEveryone initClientForEveryone = new InitClientForEveryone(client);
-                            t = new Thread(initClientForEveryone);
-                            t.start();
-                        } else {
-                            ClientUtils.updateUsername(client, clients);
+                            initClientForEveryone.run();
+//                            t = new Thread(initClientForEveryone);
+//                            t.start();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } else {
+//                            ClientUtils.updateUsername(client, clients);
                     }
                     break;
 
                 case get_move_direction:
-                    try {
                         client.setDirection(getDirectionFromBuffer(buffer));
 
                         client.setPosition(getPositionFromBuffer(buffer));
 
-                        ClientUtils.setDirection(client, clients);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                        ClientUtils.setDirection(client, clients);
                     break;
                 default:
                     break loopThroughBuffer;
