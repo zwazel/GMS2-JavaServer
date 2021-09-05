@@ -24,7 +24,7 @@ public class ClientUtils {
 
                 channel = cc.getChannel();
                 dOut = new DataOutputStream(channel.socket().getOutputStream());
-                dOut.write(NetworkCommands.send_move_direction.ordinal());
+                dOut.write(NetworkCommands.update_clients.ordinal());
                 dOut.writeInt(c.getMyId());
                 putDirectionInStream(dOut, c.getDirection());
                 putPositionInStream(dOut, c.getPosition());

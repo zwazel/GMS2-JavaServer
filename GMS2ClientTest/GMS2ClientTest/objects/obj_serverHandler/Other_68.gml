@@ -37,9 +37,7 @@ if n_id == socket {
 				break;
 					
 				case networkCommands.get_all_clients:
-					show_debug_message("GETTING ALL CLIENTS");
 					var amountClients = GetIntFromBuffer(bufferIn);
-					show_debug_message("AMOUNT CLIENTS = " +string(amountClients));
 					for(var i = 0; i < amountClients; i++) {
 						var newClient = InitClientFromBuffer(bufferIn, id);
 						ds_list_add(clients, newClient);
@@ -60,14 +58,10 @@ if n_id == socket {
 					}
 				break;
 				
-				case networkCommands.get_move_direction:
-					var clientID = GetIntFromBuffer(bufferIn);
-					var directions = GetDirectionFromBuffer(bufferIn);
-					var positions = GetPositionFromBuffer(bufferIn);
-					
-					var client = GetClientFromDsList(clients, clientID);
-					if(client!=noone) {
-						client.setMyDirection(directions[0], directions[1], positions[0], positions[1]);
+				case networkCommands.update_clients:
+					var amountClients = GetIntFromBuffer(bufferIn);
+					for(var i = 0; i < amountClients; i++) {
+						UpdateClientFromBuffer(bufferIn, id, clients, mePlayer);
 					}
 				break;
 				

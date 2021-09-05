@@ -45,6 +45,8 @@ public class PutUtils {
             dOut.writeInt(c.getHealth()); // Health
             if(init) {
                 dOut.writeInt(c.getSpeed());
+            } else {
+                dOut.writeInt(c.getPing());
             }
             putPositionInStream(dOut, c.getPosition()); // Position
             putDirectionInStream(dOut, c.getDirection()); // Direction

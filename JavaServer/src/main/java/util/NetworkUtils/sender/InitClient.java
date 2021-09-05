@@ -9,7 +9,6 @@ import java.io.IOException;
 import static util.NetworkUtils.PutUtils.putClientInStream;
 
 public record InitClient(Client newClient) implements Runnable{
-
     @Override
     public void run() {
         // Send information for the client itself to the new client

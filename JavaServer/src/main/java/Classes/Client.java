@@ -29,6 +29,7 @@ public class Client implements Runnable {
     private long sentPackages = 0;
     private long receivedPackages = 0;
     private int ping;
+    private boolean ready = false;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -104,6 +105,7 @@ public class Client implements Runnable {
                             this.setUsername(username);
 
                             if (newConnection) {
+                                this.ready = true;
                                 if (clients.size() > 1) {
                                     InitClientForEveryone initClientForEveryone = new InitClientForEveryone(this);
                                     initClientForEveryone.run();
@@ -252,5 +254,13 @@ public class Client implements Runnable {
 
     public void setPing(int ping) {
         this.ping = ping;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 }

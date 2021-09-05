@@ -2,7 +2,6 @@ package Classes;
 
 import util.ClientUtils;
 import util.NetworkUtils.sender.InitClient;
-import util.NetworkUtils.sender.InitClientForEveryone;
 import util.Position;
 
 import java.io.IOException;
@@ -40,6 +39,10 @@ public class Server {
             socket = null;
             running = false;
         }
+
+        Sender s = new Sender(this);
+        Thread senderThread = new Thread(s);
+        senderThread.start();
 
         while (running) {
             try {

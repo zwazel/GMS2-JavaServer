@@ -10,7 +10,7 @@ public enum NetworkCommands {
     update_username,
     send_all_clients,
     get_move_direction,
-    send_move_direction,
+    update_clients,
     send_ping_other,
     end_of_packet;
 

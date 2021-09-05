@@ -8,7 +8,7 @@ enum networkCommands {
 	update_username,
 	get_all_clients,
 	send_move_direction,
-	get_move_direction,
+	update_clients,
 	receive_ping_other,
 	end_of_packet,
 }
