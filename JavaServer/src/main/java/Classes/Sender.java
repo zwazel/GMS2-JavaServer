@@ -38,17 +38,9 @@ public class Sender implements Runnable {
                     break;
 
                 case send_ping:
-                    int time = buffer.getInt();
-
-                    try {
-                        dOut = new DataOutputStream(channel.socket().getOutputStream());
-                        dOut.write(command.ordinal());
-                        dOut.writeInt(time);
-                        dOut.flush();
-                        client.increaseSentPackages(1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    SendPing sP = new SendPing(client.getServer(), client, buffer.getInt());
+                    Thread t = new Thread(sP);
+                    t.start();
                     break;
                 case send_ping_other:
                     int ping = buffer.getInt();
