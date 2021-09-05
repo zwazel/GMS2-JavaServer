@@ -30,15 +30,9 @@ public record Sender(ByteBuffer buffer, Client client) implements Runnable {
                 case send_ping:
                     sP = new SendPing(client.getServer(), client, buffer.getInt(), false);
                     sP.run();
-//                    t = new Thread(sP);
-//                    t.start();
                     break;
                 case send_ping_other:
                     client.setPing(buffer.getInt());
-                    sP = new SendPing(client.getServer(), client, client.getPing(), true);
-                    sP.run();
-//                    t = new Thread(sP);
-//                    t.start();
                     break;
                 case receive_username:
                     int stringLength = buffer.getInt();
@@ -55,16 +49,14 @@ public record Sender(ByteBuffer buffer, Client client) implements Runnable {
 //                            t.start();
                         }
                     } else {
-//                            ClientUtils.updateUsername(client, clients);
+                        // TODO: 05.09.2021: Update username
                     }
                     break;
 
                 case get_move_direction:
-                        client.setDirection(getDirectionFromBuffer(buffer));
+                    client.setDirection(getDirectionFromBuffer(buffer));
 
-                        client.setPosition(getPositionFromBuffer(buffer));
-
-//                        ClientUtils.setDirection(client, clients);
+                    client.setPosition(getPositionFromBuffer(buffer));
                     break;
                 default:
                     break loopThroughBuffer;
