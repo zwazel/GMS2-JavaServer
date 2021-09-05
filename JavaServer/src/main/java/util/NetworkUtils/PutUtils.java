@@ -45,6 +45,6 @@ public class PutUtils {
     }
 
     public static void putClientInStream(DataOutputStream dOut, Client c) {
-        putClientInStream(dOut, c, true);
+        putClientInStream(dOut, c, (c.getUsername() == null));
     }
 }

@@ -26,8 +26,8 @@ if n_id == socket {
 				case networkCommands.send_ping:
 					var timeFromServer = GetIntFromBuffer(bufferIn);
 					latency = current_time - timeFromServer;
-					
-					sendFinalPing(latency);
+					mePlayer.ping = latency;
+					show_debug_message("meplayerping = " + string(mePlayer.ping));
 					break;
 					
 				case networkCommands.client_connect:

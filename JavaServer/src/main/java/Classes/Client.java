@@ -23,7 +23,7 @@ public class Client implements Runnable {
     private Direction direction = new Direction();
     private long sentPackages = 0;
     private long receivedPackages = 0;
-    private long ping;
+    private int ping;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -209,11 +209,11 @@ public class Client implements Runnable {
         this.server.increaseReceivedPackages(amount);
     }
 
-    public long getPing() {
+    public int getPing() {
         return ping;
     }
 
-    public void setPing(long ping) {
+    public void setPing(int ping) {
         this.ping = ping;
     }
 }

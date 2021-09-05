@@ -11,15 +11,7 @@ import java.util.List;
 
 import static util.NetworkUtils.GetUtils.*;
 
-public class Sender implements Runnable {
-    private final Client client;
-    private final ByteBuffer buffer;
-
-    public Sender(ByteBuffer buffer, Client client) {
-        this.client = client;
-        this.buffer = buffer;
-    }
-
+public record Sender(ByteBuffer buffer, Client client) implements Runnable {
     @Override
     public void run() {
         DataOutputStream dOut;
@@ -33,23 +25,22 @@ public class Sender implements Runnable {
             final NetworkCommands command = NetworkCommands.getValues()[commandByte];
             System.out.println(client.getUsername() + ", command = " + command);
 
+            SendPing sP;
+            Thread t;
             switch (command) {
                 case test:
                     break;
 
                 case send_ping:
-                    SendPing sP = new SendPing(client.getServer(), client, buffer.getInt());
-                    Thread t = new Thread(sP);
+                    sP = new SendPing(client.getServer(), client, buffer.getInt(), false);
+                    t = new Thread(sP);
                     t.start();
                     break;
                 case send_ping_other:
-                    int ping = buffer.getInt();
-                    try {
-                        client.setPing(ping);
-                        ClientUtils.sendPingToEveryone(this.client, clients, ping);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    client.setPing(buffer.getInt());
+                    sP = new SendPing(client.getServer(), client, client.getPing(), true);
+                    t = new Thread(sP);
+                    t.start();
                     break;
                 case receive_username:
                     int stringLength = buffer.getInt();

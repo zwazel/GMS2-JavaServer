@@ -5,6 +5,7 @@ show_debug_message("current time: " + string(currentTime));
 buffer_write(myBuffer, buffer_s32, currentTime);
 
 sendMoveCommand(mePlayer.lastSendDirectionX, mePlayer.lastSendDirectionY, mePlayer.x, mePlayer.y);
+sendFinalPing(mePlayer.ping);
 
 buffer_write(myBuffer, buffer_s8, networkCommands.end_of_packet);
 
