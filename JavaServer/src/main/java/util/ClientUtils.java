@@ -92,22 +92,4 @@ public class ClientUtils {
             c.increaseSentPackages(1);
         }
     }
-
-    public static void sendPingToEveryone(Client c, List<Client> clients, int ping) throws IOException {
-        SocketChannel channel;
-        DataOutputStream dOut;
-        for (Client cc : clients) {
-            if (c.getMyId() == cc.getMyId()) {
-                continue;
-            }
-            channel = cc.getChannel();
-
-            dOut = new DataOutputStream(channel.socket().getOutputStream());
-            dOut.write(NetworkCommands.send_ping_other.ordinal());
-            dOut.writeInt(c.getMyId());
-            dOut.writeInt(ping);
-            dOut.flush();
-            cc.increaseSentPackages(1);
-        }
-    }
 }
