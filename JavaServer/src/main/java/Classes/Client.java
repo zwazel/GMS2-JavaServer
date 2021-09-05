@@ -3,6 +3,8 @@ package Classes;
 import GlobalStuff.NetworkCommands;
 import util.Direction;
 import util.NetworkUtils.PutUtils;
+import util.NetworkUtils.sender.InitClientForEveryone;
+import util.NetworkUtils.sender.SendPing;
 import util.Position;
 
 import java.io.DataOutputStream;
@@ -10,6 +12,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
+import java.util.List;
+
+import static util.NetworkUtils.GetUtils.*;
 
 public class Client implements Runnable {
     private SocketChannel channel;
@@ -71,9 +76,52 @@ public class Client implements Runnable {
                 bufferWithActualStuff.order(ByteOrder.LITTLE_ENDIAN);
                 bufferWithActualStuff.position(0);
 
-                Sender sender = new Sender(bufferWithActualStuff, this);
-                Thread t = new Thread(sender);
-                t.start();
+                List<Client> clients = this.server.getClients();
+
+                loopThroughBuffer:
+                while (bufferWithActualStuff.hasRemaining()) {
+                    final byte commandByte = bufferWithActualStuff.get();
+
+                    final NetworkCommands command = NetworkCommands.getValues()[commandByte];
+                    System.out.println(this.getUsername() + ", command = " + command);
+
+                    switch (command) {
+                        case test:
+                            break;
+
+                        case send_ping:
+                            SendPing sP = new SendPing(this.server, this, bufferWithActualStuff.getInt(), false);
+                            sP.run();
+                            break;
+                        case send_ping_other:
+                            this.setPing(bufferWithActualStuff.getInt());
+                            break;
+                        case receive_username:
+                            int stringLength = bufferWithActualStuff.getInt();
+                            String username = getStringFromBuffer(bufferWithActualStuff, stringLength);
+
+                            boolean newConnection = (this.getUsername() == null);
+                            this.setUsername(username);
+
+                            if (newConnection) {
+                                if (clients.size() > 1) {
+                                    InitClientForEveryone initClientForEveryone = new InitClientForEveryone(this);
+                                    initClientForEveryone.run();
+                                }
+                            } else {
+                                // TODO: 05.09.2021: Update username
+                            }
+                            break;
+
+                        case get_move_direction:
+                            this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
+
+                            this.setPosition(getPositionFromBuffer(bufferWithActualStuff));
+                            break;
+                        default:
+                            break loopThroughBuffer;
+                    }
+                }
 
                 increaseReceivedPackages(2);
 
