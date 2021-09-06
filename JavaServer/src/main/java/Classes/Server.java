@@ -50,7 +50,7 @@ public class Server {
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
                     Client c = new Client(idCounter++, startPosition, this, newChannel);
-                    if(this.clients.size() > 0) {
+                    if (this.clients.size() > 0) {
                         c.addNewClients(clients);
                     }
                     Thread t = new Thread(c);
@@ -90,10 +90,11 @@ public class Server {
 
     public void removeClient(Client client) {
         try {
-            clients.remove(client);
             ClientUtils.clientDisconnected(client, clients);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            clients.remove(client);
         }
     }
 

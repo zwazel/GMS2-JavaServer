@@ -135,11 +135,12 @@ public class Client implements Runnable {
                 ex.printStackTrace();
                 System.out.println(channel.socket().getInetAddress().toString() + " (" + this.username + ") has disconnected.");
                 connected = false;
-                server.removeClient(this);
                 try {
                     channel.close();
                 } catch (IOException ex1) {
                     ex1.printStackTrace();
+                } finally {
+                    server.removeClient(this);
                 }
             }
         }
@@ -154,7 +155,7 @@ public class Client implements Runnable {
             dOut.write(NetworkCommands.client_connect.ordinal());
             dOut.writeInt(this.newClients.size());
             for (Client client : newClients) {
-                if(client.isReady()) {
+                if (client.isReady()) {
                     putClientInStream(dOut, client, true);
                     newClients.remove(client);
                 }
@@ -234,8 +235,8 @@ public class Client implements Runnable {
     }
 
     public void addNewClients(List<Client> clients) {
-        for(Client client : clients) {
-            if(!client.isReady() || client.getMyId() == this.myId) {
+        for (Client client : clients) {
+            if (!client.isReady() || client.getMyId() == this.myId) {
                 continue;
             }
 
