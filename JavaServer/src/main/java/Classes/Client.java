@@ -124,9 +124,11 @@ public class Client implements Runnable {
 
                 increaseReceivedPackages(2);
 
-                sendOutData();
+                if (this.ready) {
+                    sendOutData();
 
-                increaseSentPackages(1);
+                    increaseSentPackages(1);
+                }
 
                 System.out.println(getInfos());
             } catch (IOException ex) {
@@ -152,10 +154,11 @@ public class Client implements Runnable {
             dOut.write(NetworkCommands.client_connect.ordinal());
             dOut.writeInt(this.newClients.size());
             for (Client client : newClients) {
-                putClientInStream(dOut, client, true);
+                if(client.isReady()) {
+                    putClientInStream(dOut, client, true);
+                    newClients.remove(client);
+                }
             }
-
-            newClients = new ArrayList<>();
         }
 
         if (this.server.getClients().size() > 1) {
@@ -177,6 +180,7 @@ public class Client implements Runnable {
             }
         }
 
+        dOut.write(NetworkCommands.end_of_packet.ordinal());
         dOut.flush();
     }
 

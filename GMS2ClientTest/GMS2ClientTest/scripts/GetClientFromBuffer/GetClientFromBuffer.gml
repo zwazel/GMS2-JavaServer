@@ -25,7 +25,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	if(clientID == mePlayer.myId) {
 		clientToUpdate = mePlayer;
 	} else {
-		clientToUpdate = GetClientFromDsList(clients);
+		clientToUpdate = GetClientFromDsList(clients, clientID);
 	}
 
 	with(clientToUpdate) {

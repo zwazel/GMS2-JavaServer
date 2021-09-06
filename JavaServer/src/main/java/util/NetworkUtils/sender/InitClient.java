@@ -17,6 +17,7 @@ public record InitClient(Client newClient) implements Runnable{
             dOut = new DataOutputStream(newClient.getChannel().socket().getOutputStream());
             dOut.write(NetworkCommands.send_client_its_id.ordinal());
             putClientInStream(dOut, newClient, true);
+            dOut.write(NetworkCommands.end_of_packet.ordinal());
             dOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
