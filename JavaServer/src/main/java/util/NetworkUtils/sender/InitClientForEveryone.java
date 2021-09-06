@@ -26,6 +26,7 @@ public record InitClientForEveryone(Client newClient) implements Runnable {
                 }
                 putClientInStream(dOut, client, true);
             }
+            dOut.write(NetworkCommands.end_of_packet.ordinal());
             dOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,6 +41,7 @@ public record InitClientForEveryone(Client newClient) implements Runnable {
                 dOut = new DataOutputStream(client.getChannel().socket().getOutputStream());
                 dOut.write(NetworkCommands.client_connect.ordinal());
                 putClientInStream(dOut, newClient, true);
+                dOut.write(NetworkCommands.end_of_packet.ordinal());
                 dOut.flush();
             } catch (IOException e) {
                 e.printStackTrace();

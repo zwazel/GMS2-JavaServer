@@ -172,7 +172,7 @@ public class Client implements Runnable {
             }
 
             if (clientsToUpdate.size() > 0) {
-                dOut.write(NetworkCommands.send_all_clients.ordinal());
+                dOut.write(NetworkCommands.update_clients.ordinal());
                 dOut.writeInt(clientsToUpdate.size());
                 for (Client client : clientsToUpdate) {
                     putClientInStream(dOut, client, false);
@@ -229,6 +229,16 @@ public class Client implements Runnable {
 
     public void addNewClient(Client client) {
         if (this.myId != client.getMyId()) {
+            this.newClients.add(client);
+        }
+    }
+
+    public void addNewClients(List<Client> clients) {
+        for(Client client : clients) {
+            if(!client.isReady() || client.getMyId() == this.myId) {
+                continue;
+            }
+
             this.newClients.add(client);
         }
     }

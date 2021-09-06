@@ -40,10 +40,6 @@ public class Server {
             running = false;
         }
 
-        Sender s = new Sender(this);
-        Thread senderThread = new Thread(s);
-        senderThread.start();
-
         while (running) {
             try {
                 // Check for new connections
@@ -54,6 +50,9 @@ public class Server {
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
                     Client c = new Client(idCounter++, startPosition, this, newChannel);
+                    if(this.clients.size() > 0) {
+                        c.addNewClients(clients);
+                    }
                     Thread t = new Thread(c);
                     t.start();
 
