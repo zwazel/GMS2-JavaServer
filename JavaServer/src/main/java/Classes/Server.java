@@ -79,6 +79,16 @@ public class Server {
         }
     }
 
+    public void addNewClient(Client newClient) {
+        for (Client client : clients) {
+            if (client.getMyId() == newClient.getMyId()) {
+                continue;
+            }
+
+            client.addNewClient(newClient);
+        }
+    }
+
     public void removeClient(Client client) {
         try {
             clients.remove(client);

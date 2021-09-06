@@ -2,9 +2,6 @@ package Classes;
 
 import GlobalStuff.NetworkCommands;
 import util.Direction;
-import util.NetworkUtils.PutUtils;
-import util.NetworkUtils.sender.InitClientForEveryone;
-import util.NetworkUtils.sender.SendPing;
 import util.Position;
 
 import java.io.DataOutputStream;
@@ -12,9 +9,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.List;
 
 import static util.NetworkUtils.GetUtils.*;
+import static util.NetworkUtils.PutUtils.putClientInStream;
 
 public class Client implements Runnable {
     private SocketChannel channel;
@@ -28,8 +27,10 @@ public class Client implements Runnable {
     private Direction direction = new Direction();
     private long sentPackages = 0;
     private long receivedPackages = 0;
-    private int ping;
+    private int pingTime = -1;
+    private int ping = -1;
     private boolean ready = false;
+    private ArrayList<Client> newClients = new ArrayList<>();
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -54,7 +55,7 @@ public class Client implements Runnable {
     private void initClientThroughNetwork() throws IOException {
         DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
         dOut.write(NetworkCommands.send_client_its_id.ordinal());
-        PutUtils.putClientInStream(dOut, this, false);
+        putClientInStream(dOut, this, false);
 
         dOut.flush();
     }
@@ -91,11 +92,10 @@ public class Client implements Runnable {
                             break;
 
                         case send_ping:
-                            SendPing sP = new SendPing(this.server, this, bufferWithActualStuff.getInt(), false);
-                            sP.run();
+                            this.pingTime = bufferWithActualStuff.getInt();
                             break;
                         case send_ping_other:
-                            this.setPing(bufferWithActualStuff.getInt());
+                            this.ping = bufferWithActualStuff.getInt();
                             break;
                         case receive_username:
                             int stringLength = bufferWithActualStuff.getInt();
@@ -106,10 +106,7 @@ public class Client implements Runnable {
 
                             if (newConnection) {
                                 this.ready = true;
-                                if (clients.size() > 1) {
-                                    InitClientForEveryone initClientForEveryone = new InitClientForEveryone(this);
-                                    initClientForEveryone.run();
-                                }
+                                server.addNewClient(this);
                             } else {
                                 // TODO: 05.09.2021: Update username
                             }
@@ -127,6 +124,10 @@ public class Client implements Runnable {
 
                 increaseReceivedPackages(2);
 
+                sendOutData();
+
+                increaseSentPackages(1);
+
                 System.out.println(getInfos());
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -140,6 +141,43 @@ public class Client implements Runnable {
                 }
             }
         }
+    }
+
+    private void sendOutData() throws IOException {
+        DataOutputStream dOut = new DataOutputStream(this.channel.socket().getOutputStream());
+        dOut.write(NetworkCommands.send_ping.ordinal());
+        dOut.writeInt(this.pingTime);
+
+        if (this.newClients.size() > 0) {
+            dOut.write(NetworkCommands.client_connect.ordinal());
+            dOut.writeInt(this.newClients.size());
+            for (Client client : newClients) {
+                putClientInStream(dOut, client, true);
+            }
+
+            newClients = new ArrayList<>();
+        }
+
+        if (this.server.getClients().size() > 1) {
+            ArrayList<Client> clientsToUpdate = new ArrayList<>();
+            for (Client client : this.server.getClients()) {
+                if (newClients.contains(client) || this.myId == client.getMyId()) {
+                    continue;
+                }
+
+                clientsToUpdate.add(client);
+            }
+
+            if (clientsToUpdate.size() > 0) {
+                dOut.write(NetworkCommands.send_all_clients.ordinal());
+                dOut.writeInt(clientsToUpdate.size());
+                for (Client client : clientsToUpdate) {
+                    putClientInStream(dOut, client, false);
+                }
+            }
+        }
+
+        dOut.flush();
     }
 
     @Override
@@ -167,6 +205,28 @@ public class Client implements Runnable {
                 "},sent/received{" + this.getSentPackages() + "," + this.getReceivedPackages() +
                 "}," + this.direction +
                 "," + this.position);
+    }
+
+    public int getPingTime() {
+        return pingTime;
+    }
+
+    public void setPingTime(int pingTime) {
+        this.pingTime = pingTime;
+    }
+
+    public ArrayList<Client> getNewClients() {
+        return newClients;
+    }
+
+    public void setNewClients(ArrayList<Client> newClients) {
+        this.newClients = newClients;
+    }
+
+    public void addNewClient(Client client) {
+        if (this.myId != client.getMyId()) {
+            this.newClients.add(client);
+        }
     }
 
     public SocketChannel getChannel() {
