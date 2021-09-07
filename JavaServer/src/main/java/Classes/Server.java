@@ -1,6 +1,5 @@
 package Classes;
 
-import util.ClientUtils;
 import util.NetworkUtils.sender.InitClient;
 import util.Position;
 
@@ -89,13 +88,14 @@ public class Server {
     }
 
     public void removeClient(Client client) {
-        try {
-            ClientUtils.clientDisconnected(client, clients);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            clients.remove(client);
+        for (Client clientToInform : clients) {
+            if (client.getMyId() == clientToInform.getMyId()) {
+                continue;
+            }
+
+            clientToInform.addClientDisconnected(client);
         }
+        clients.remove(client);
     }
 
     public List<Client> getClients() {

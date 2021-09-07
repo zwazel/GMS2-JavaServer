@@ -31,6 +31,7 @@ public class Client implements Runnable {
     private int ping = -1;
     private boolean ready = false;
     private ArrayList<Client> newClients = new ArrayList<>();
+    private ArrayList<Client> clientsDisconnected = new ArrayList<>();
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -85,7 +86,7 @@ public class Client implements Runnable {
                     final byte commandByte = bufferWithActualStuff.get();
 
                     final NetworkCommands command = NetworkCommands.getValues()[commandByte];
-                    System.out.println(this.getUsername() + ", command = " + command);
+                    System.out.println(this.getUsername() + ", command in = " + command);
 
                     switch (command) {
                         case test:
@@ -152,13 +153,20 @@ public class Client implements Runnable {
         dOut.writeInt(this.pingTime);
 
         if (this.newClients.size() > 0) {
+            System.out.println("username = " + username);
+            System.out.println("newClients = " + newClients.size());
+            ArrayList<Client> clientsToRemove = new ArrayList<>();
             dOut.write(NetworkCommands.client_connect.ordinal());
             dOut.writeInt(this.newClients.size());
             for (Client client : newClients) {
                 if (client.isReady()) {
                     putClientInStream(dOut, client, true);
-                    newClients.remove(client);
+                    clientsToRemove.add(client);
                 }
+            }
+
+            for (Client client : clientsToRemove) {
+                newClients.remove(client);
             }
         }
 
@@ -178,6 +186,14 @@ public class Client implements Runnable {
                 for (Client client : clientsToUpdate) {
                     putClientInStream(dOut, client, false);
                 }
+            }
+        }
+
+        if(this.clientsDisconnected.size() > 0) {
+            dOut.write(NetworkCommands.client_disconnect.ordinal());
+            dOut.writeInt(clientsDisconnected.size());
+            for(Client client : clientsDisconnected) {
+                dOut.writeInt(client.getMyId());
             }
         }
 
@@ -241,6 +257,20 @@ public class Client implements Runnable {
             }
 
             this.newClients.add(client);
+        }
+    }
+
+    public ArrayList<Client> getClientsDisconnected() {
+        return clientsDisconnected;
+    }
+
+    public void setClientsDisconnected(ArrayList<Client> clientsDisconnected) {
+        this.clientsDisconnected = clientsDisconnected;
+    }
+
+    public void addClientDisconnected(Client client) {
+        if (this.myId != client.getMyId()) {
+            this.clientsDisconnected.add(client);
         }
     }
 

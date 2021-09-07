@@ -22,4 +22,4 @@ buffer_seek(myBuffer,buffer_seek_start,0);
 
 sentPackages+=2;
 
-alarm[0] = room_speed;
+alarm[0] = room_speed/5;
