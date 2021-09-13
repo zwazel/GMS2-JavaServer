@@ -39,8 +39,12 @@ if n_id == socket {
 					
 					case networkCommands.client_connect:
 						show_debug_message("CLIENT CONNECT");
-						var newClient = InitClientFromBuffer(bufferIn, id);
-						ds_list_add(clients, newClient);
+						var amountClients = GetIntFromBuffer(bufferIn);
+						show_debug_message("amount: " + string(amountClients));
+						for(var i = 0; i < amountClients; i++) {
+							var newClient = InitClientFromBuffer(bufferIn, id);
+							ds_list_add(clients, newClient);
+						}
 					break;
 					
 					case networkCommands.get_all_clients:

@@ -18,7 +18,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	show_debug_message("client id = " + string(clientID));
 	show_debug_message("client username = " + string(clientUsername));
 	show_debug_message("client health = " + string(clientHealth));
-	show_debug_message("client speed = " + string(clientPing));
+	show_debug_message("client ping = " + string(clientPing));
 	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
 	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
 	
@@ -61,7 +61,9 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 	var newClient = noone;
 	
 	show_debug_message("client id = " + string(clientID));
-	show_debug_message("client username = " + string(clientUsername));
+	if(withUsername) {
+		show_debug_message("client username = " + string(clientUsername));
+	}
 	show_debug_message("client health = " + string(clientHealth));
 	show_debug_message("client speed = " + string(clientSpeed));
 	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");

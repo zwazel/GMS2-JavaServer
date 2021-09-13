@@ -72,21 +72,19 @@ public class Client implements Runnable {
                 buffer.position(0);
 
                 final int receivedBufferSize = buffer.getInt();
-                System.out.println("receivedBufferSize = " + receivedBufferSize);
+//                System.out.println("receivedBufferSize = " + receivedBufferSize);
 
                 ByteBuffer bufferWithActualStuff = ByteBuffer.allocate(bufferSize);
                 channel.read(bufferWithActualStuff);   // fill buffer from the input stream
                 bufferWithActualStuff.order(ByteOrder.LITTLE_ENDIAN);
                 bufferWithActualStuff.position(0);
 
-                List<Client> clients = this.server.getClients();
-
                 loopThroughBuffer:
                 while (bufferWithActualStuff.hasRemaining()) {
                     final byte commandByte = bufferWithActualStuff.get();
 
                     final NetworkCommands command = NetworkCommands.getValues()[commandByte];
-                    System.out.println(this.getUsername() + ", command in = " + command);
+//                    System.out.println(this.getUsername() + ", command in = " + command);
 
                     switch (command) {
                         case test:
@@ -131,7 +129,7 @@ public class Client implements Runnable {
                     increaseSentPackages(1);
                 }
 
-                System.out.println(getInfos());
+//                System.out.println(getInfos());
             } catch (IOException ex) {
                 ex.printStackTrace();
                 System.out.println(channel.socket().getInetAddress().toString() + " (" + this.username + ") has disconnected.");
@@ -158,6 +156,7 @@ public class Client implements Runnable {
             ArrayList<Client> clientsReady = new ArrayList<>();
             for (Client client : newClients) {
                 if (client.isReady()) {
+                    System.out.println("current new client: " + client.username);
                     clientsReady.add(client);
                 }
             }
@@ -166,11 +165,11 @@ public class Client implements Runnable {
                 ArrayList<Client> clientsToRemove = new ArrayList<>();
                 dOut.write(NetworkCommands.client_connect.ordinal());
                 dOut.writeInt(clientsReady.size());
+                System.out.println("clientsReady.size() = " + clientsReady.size());
                 for (Client client : clientsReady) {
-                    if (client.isReady()) {
-                        putClientInStream(dOut, client, true);
-                        clientsToRemove.add(client);
-                    }
+                    System.out.println("put client " + client.username + " as new client in " + this.username);
+                    putClientInStream(dOut, client, true);
+                    clientsToRemove.add(client);
                 }
 
                 for (Client client : clientsToRemove) {
@@ -182,7 +181,7 @@ public class Client implements Runnable {
         if (this.server.getClients().size() > 1) {
             ArrayList<Client> clientsToUpdate = new ArrayList<>();
             for (Client client : this.server.getClients()) {
-                if (newClients.contains(client) || this.myId == client.getMyId()) {
+                if (newClients.contains(client) || this.myId == client.getMyId() || !client.isReady()) {
                     continue;
                 }
 
@@ -193,6 +192,7 @@ public class Client implements Runnable {
                 dOut.write(NetworkCommands.update_clients.ordinal());
                 dOut.writeInt(clientsToUpdate.size());
                 for (Client client : clientsToUpdate) {
+                    System.out.println("put client " + client.username + " as update in " + this.username);
                     putClientInStream(dOut, client, false);
                 }
             }
@@ -204,6 +204,8 @@ public class Client implements Runnable {
             for (Client client : clientsDisconnected) {
                 dOut.writeInt(client.getMyId());
             }
+
+            clientsDisconnected.clear();
         }
 
         dOut.write(NetworkCommands.end_of_packet.ordinal());
