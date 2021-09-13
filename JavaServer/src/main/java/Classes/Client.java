@@ -155,18 +155,27 @@ public class Client implements Runnable {
         if (this.newClients.size() > 0) {
             System.out.println("username = " + username);
             System.out.println("newClients = " + newClients.size());
-            ArrayList<Client> clientsToRemove = new ArrayList<>();
-            dOut.write(NetworkCommands.client_connect.ordinal());
-            dOut.writeInt(this.newClients.size());
+            ArrayList<Client> clientsReady = new ArrayList<>();
             for (Client client : newClients) {
                 if (client.isReady()) {
-                    putClientInStream(dOut, client, true);
-                    clientsToRemove.add(client);
+                    clientsReady.add(client);
                 }
             }
+            System.out.println("clientsReady.size() = " + clientsReady.size());
+            if (clientsReady.size() > 0) {
+                ArrayList<Client> clientsToRemove = new ArrayList<>();
+                dOut.write(NetworkCommands.client_connect.ordinal());
+                dOut.writeInt(clientsReady.size());
+                for (Client client : clientsReady) {
+                    if (client.isReady()) {
+                        putClientInStream(dOut, client, true);
+                        clientsToRemove.add(client);
+                    }
+                }
 
-            for (Client client : clientsToRemove) {
-                newClients.remove(client);
+                for (Client client : clientsToRemove) {
+                    newClients.remove(client);
+                }
             }
         }
 
@@ -189,10 +198,10 @@ public class Client implements Runnable {
             }
         }
 
-        if(this.clientsDisconnected.size() > 0) {
+        if (this.clientsDisconnected.size() > 0) {
             dOut.write(NetworkCommands.client_disconnect.ordinal());
             dOut.writeInt(clientsDisconnected.size());
-            for(Client client : clientsDisconnected) {
+            for (Client client : clientsDisconnected) {
                 dOut.writeInt(client.getMyId());
             }
         }
@@ -252,7 +261,7 @@ public class Client implements Runnable {
 
     public void addNewClients(List<Client> clients) {
         for (Client client : clients) {
-            if (!client.isReady() || client.getMyId() == this.myId) {
+            if (client.getMyId() == this.myId) {
                 continue;
             }
 
