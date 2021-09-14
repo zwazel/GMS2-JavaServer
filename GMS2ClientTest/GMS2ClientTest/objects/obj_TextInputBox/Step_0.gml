@@ -1,6 +1,10 @@
 /// @description Handle keys presses/input
 if(ready) {
 	if(active) {
+		if(alarm[0] <= 0) {
+			alarm = room_speed/2;
+		}
+		
 		if(keyboard_check(vk_anykey) and string_length(text) < max_chars) { // check if any key has been pressed and if our length isnt the max
 			text = text+string(keyboard_string);
 			keyboard_string = "";
@@ -22,7 +26,10 @@ if(ready) {
 		if(delete_timer != delete_timer_max) {
 			delete_timer++;
 		}
-	} else if (canClearString) {
-		keyboard_string = "";
+	} else { 
+		if (canClearString) {
+			keyboard_string = "";
+		}
+		cursor = " ";
 	}
 }
