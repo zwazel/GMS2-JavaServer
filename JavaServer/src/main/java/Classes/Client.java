@@ -103,6 +103,8 @@ public class Client implements Runnable {
                             boolean newConnection = (this.getUsername() == null);
                             this.setUsername(username);
 
+                            System.out.println("username = " + username + ", id = " + myId);
+
                             if (newConnection) {
                                 this.ready = true;
                                 server.addNewClient(this);
@@ -150,38 +152,10 @@ public class Client implements Runnable {
         dOut.write(NetworkCommands.send_ping.ordinal());
         dOut.writeInt(this.pingTime);
 
-        if (this.newClients.size() > 0) {
-            System.out.println("username = " + username);
-            System.out.println("newClients = " + newClients.size());
-            ArrayList<Client> clientsReady = new ArrayList<>();
-            for (Client client : newClients) {
-                if (client.isReady()) {
-                    System.out.println("current new client: " + client.username);
-                    clientsReady.add(client);
-                }
-            }
-            System.out.println("clientsReady.size() = " + clientsReady.size());
-            if (clientsReady.size() > 0) {
-                ArrayList<Client> clientsToRemove = new ArrayList<>();
-                dOut.write(NetworkCommands.client_connect.ordinal());
-                dOut.writeInt(clientsReady.size());
-                System.out.println("clientsReady.size() = " + clientsReady.size());
-                for (Client client : clientsReady) {
-                    System.out.println("put client " + client.username + " as new client in " + this.username);
-                    putClientInStream(dOut, client, true);
-                    clientsToRemove.add(client);
-                }
-
-                for (Client client : clientsToRemove) {
-                    newClients.remove(client);
-                }
-            }
-        }
-
         if (this.server.getClients().size() > 1) {
             ArrayList<Client> clientsToUpdate = new ArrayList<>();
             for (Client client : this.server.getClients()) {
-                if (newClients.contains(client) || this.myId == client.getMyId() || !client.isReady()) {
+                if (!client.isReady() || this.myId == client.getMyId() || newClients.contains(client) || clientsDisconnected.contains(client)) {
                     continue;
                 }
 
@@ -191,9 +165,38 @@ public class Client implements Runnable {
             if (clientsToUpdate.size() > 0) {
                 dOut.write(NetworkCommands.update_clients.ordinal());
                 dOut.writeInt(clientsToUpdate.size());
+//                System.out.println("clientsToUpdate.size() = " + clientsToUpdate.size());
                 for (Client client : clientsToUpdate) {
-                    System.out.println("put client " + client.username + " as update in " + this.username);
+//                    System.out.println("put client " + client.username + " as update in " + this.username);
                     putClientInStream(dOut, client, false);
+                }
+            }
+        }
+
+        if (this.newClients.size() > 0) {
+//            System.out.println("newClients.size() = " + newClients.size() + " in " + username);
+//            System.out.println("newClients = " + newClients + " in " + username);
+            ArrayList<Client> clientsReady = new ArrayList<>();
+            for (Client client : newClients) {
+                if (client.isReady()) {
+//                    System.out.println("current new client: " + client.username + " in " + username);
+                    clientsReady.add(client);
+                }
+            }
+//            System.out.println("clientsReady.size() = " + clientsReady.size() + " in " + username);
+            if (clientsReady.size() > 0) {
+                ArrayList<Client> clientsToRemove = new ArrayList<>();
+                dOut.write(NetworkCommands.client_connect.ordinal());
+                dOut.writeInt(clientsReady.size());
+//                System.out.println("clientsReady.size() = " + clientsReady.size());
+                for (Client client : clientsReady) {
+//                    System.out.println("put client " + client.username + " as new client in " + this.username);
+                    putClientInStream(dOut, client, true);
+                    clientsToRemove.add(client);
+                }
+
+                for (Client client : clientsToRemove) {
+                    newClients.remove(client);
                 }
             }
         }
@@ -215,9 +218,7 @@ public class Client implements Runnable {
     @Override
     public String toString() {
         return "Client{" +
-                "channel=" + channel +
-                ", connected=" + connected +
-                ", server=" + server +
+                "connected=" + connected +
                 ", myId=" + myId +
                 ", username='" + username + '\'' +
                 ", position=" + position +
@@ -263,10 +264,11 @@ public class Client implements Runnable {
 
     public void addNewClients(List<Client> clients) {
         for (Client client : clients) {
-            if (client.getMyId() == this.myId) {
+            if (client.getMyId() == this.myId || this.newClients.contains(client) || !client.isReady()) {
                 continue;
             }
 
+//            System.out.println("adding client " + client.username + "(" + client.getMyId() + ") as new client to " + this);
             this.newClients.add(client);
         }
     }
