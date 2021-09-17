@@ -14,4 +14,7 @@ if(ready) {
 	}
 	
 	image_angle = point_direction(x,y,mouse_x,mouse_y);
+	
+	x += lastSendDirectionX * mySpeed;
+	y += lastSendDirectionY * mySpeed;
 }

@@ -32,8 +32,8 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 
 	with(clientToUpdate) {
 		myId = clientID;
-		x = position[0];
-		y = position[1];
+		targetX = position[0];
+		targetY = position[1];
 		lastSendDirectionX = _direction[0]
 		lastSendDirectionY = _direction[1]
 		hp = clientHealth;
