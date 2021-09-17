@@ -1,0 +1,1 @@
+Tickrate (explained in one of the comments): https://libredd.it/r/gamemaker/comments/piofii/online_multiplayer_movement_is_super_choppy/?sort=top
