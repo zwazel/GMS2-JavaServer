@@ -13,6 +13,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	var clientPing = GetIntFromBuffer(buffer);
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
+	var _rotation = GetFloatFromBuffer(buffer);
 	var clientToUpdate = noone;
 	
 	show_debug_message("client id = " + string(clientID));
@@ -21,6 +22,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	show_debug_message("client ping = " + string(clientPing));
 	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
 	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
+	show_debug_message("client rotation = {" + string(_rotation) + "}");
 	
 	if(clientID == mePlayer.myId) {
 		clientToUpdate = mePlayer;
@@ -40,6 +42,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 		}
 		serverHandler = server;
 		ping = clientPing;
+		image_angle = _rotation;
 	}
 }
 
@@ -58,6 +61,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 	var clientSpeed = GetIntFromBuffer(buffer);
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
+	var _rotation = GetFloatFromBuffer(buffer);
 	var newClient = noone;
 	
 	show_debug_message("client id = " + string(clientID));
@@ -68,6 +72,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 	show_debug_message("client speed = " + string(clientSpeed));
 	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
 	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
+	show_debug_message("client rotation = {" + string(_rotation) + "}");
 	
 	switch(playerType) {
 		case PlayerTypes.host:
@@ -87,6 +92,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 		hp = clientHealth;
 		username = clientUsername;
 		serverHandler = server;
+		image_angle = _rotation;
 		ready = setReady;
 	}
 	return newClient;

@@ -1,11 +1,9 @@
 /// @description
 buffer_write(myBuffer, buffer_s8, networkCommands.send_ping);
 var currentTime = current_time;
-show_debug_message("current time: " + string(currentTime));
 buffer_write(myBuffer, buffer_s32, currentTime);
 
 sendMoveCommand(mePlayer.lastSendDirectionX, mePlayer.lastSendDirectionY, mePlayer.x, mePlayer.y);
-//sendMoveCommand(mePlayer.lastSendDirectionX, mePlayer.lastSendDirectionY, mePlayer.x, mePlayer.y);
 sendFinalPing(mePlayer.ping);
 
 buffer_write(myBuffer, buffer_s8, networkCommands.end_of_packet);
@@ -23,4 +21,4 @@ buffer_seek(myBuffer,buffer_seek_start,0);
 
 sentPackages+=2;
 
-alarm[0] = room_speed/10;
+alarm[0] = room_speed/12;

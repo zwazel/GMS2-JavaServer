@@ -49,6 +49,7 @@ public class PutUtils {
             }
             putPositionInStream(dOut, c.getPosition()); // Position
             putDirectionInStream(dOut, c.getDirection()); // Direction
+            dOut.writeFloat(c.getRotation());
         } catch (IOException e) {
             e.printStackTrace();
         }

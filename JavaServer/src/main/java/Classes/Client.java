@@ -32,6 +32,7 @@ public class Client implements Runnable {
     private boolean ready = false;
     private ArrayList<Client> newClients = new ArrayList<>();
     private ArrayList<Client> clientsDisconnected = new ArrayList<>();
+    private float rotation = 0f;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -117,6 +118,8 @@ public class Client implements Runnable {
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
                             this.setPosition(getPositionFromBuffer(bufferWithActualStuff));
+
+                            this.setRotation(bufferWithActualStuff.getFloat());
                             break;
                         default:
                             break loopThroughBuffer;
@@ -222,9 +225,10 @@ public class Client implements Runnable {
                 ", myId=" + myId +
                 ", username='" + username + '\'' +
                 ", position=" + position +
+                ", direction=" + direction +
+                ", rotation=" + rotation +
                 ", speed=" + speed +
                 ", health=" + health +
-                ", direction=" + direction +
                 ", sentPackages=" + sentPackages +
                 ", receivedPackages=" + receivedPackages +
                 ", ping=" + ping +
@@ -399,5 +403,13 @@ public class Client implements Runnable {
 
     public void setReady(boolean ready) {
         this.ready = ready;
+    }
+
+    public float getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
     }
 }

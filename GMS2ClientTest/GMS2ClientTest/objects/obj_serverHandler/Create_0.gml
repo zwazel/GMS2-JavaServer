@@ -29,6 +29,7 @@ function sendMoveCommand(dirX, dirY, posX, posY) {
 	buffer_write(myBuffer, buffer_s8, networkCommands.send_move_direction);
 	PutDirectionInBuffer(myBuffer, dirX, dirY);
 	PutPositionInBuffer(myBuffer, posX, posY);
+	buffer_write(myBuffer, buffer_f32, mePlayer.image_angle);
 }
 
 function sendFinalPing(ping) {	
