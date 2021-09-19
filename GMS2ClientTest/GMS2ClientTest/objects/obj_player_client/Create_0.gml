@@ -5,3 +5,4 @@ event_inherited();
 
 targetX = x;
 targetY = y;
+lerpSpeedStopOffset = 1;
