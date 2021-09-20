@@ -36,6 +36,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 		targetY = position[1];
 		lastSendDirectionX = _direction[0]
 		lastSendDirectionY = _direction[1]
+		newCoords = true;
 		hp = clientHealth;
 		if(withUsername) {
 			username = clientUsername;
