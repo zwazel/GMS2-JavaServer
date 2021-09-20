@@ -44,6 +44,9 @@ public class PutUtils {
             dOut.writeInt(c.getHealth()); // Health
             if (init) {
                 dOut.writeInt(c.getSpeed());
+                dOut.writeFloat(c.getAcceleration());
+                dOut.writeFloat(c.getNormalDeceleration());
+                dOut.writeFloat(c.getSkidDeceleration());
             } else {
                 dOut.writeInt(c.getPing());
             }

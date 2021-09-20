@@ -32,7 +32,12 @@ public class Client implements Runnable {
     private boolean ready = false;
     private ArrayList<Client> newClients = new ArrayList<>();
     private ArrayList<Client> clientsDisconnected = new ArrayList<>();
-    private float rotation = 0f;
+    private float rotation;
+    private float horizontalVelocity = 0;
+    private float verticalVelocity = 0;
+    private float acceleration;
+    private float normalDeceleration;
+    private float skidDeceleration;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -42,24 +47,10 @@ public class Client implements Runnable {
         this.channel = channel;
 
         this.health = 100;
-        this.speed = 3;
-    }
-
-    public Client(int id, int speed, int health, Position position, Server server, SocketChannel channel) {
-        this.myId = id;
-        this.position = position;
-        this.server = server;
-        this.channel = channel;
-        this.speed = speed;
-        this.health = health;
-    }
-
-    private void initClientThroughNetwork() throws IOException {
-        DataOutputStream dOut = new DataOutputStream(channel.socket().getOutputStream());
-        dOut.write(NetworkCommands.send_client_its_id.ordinal());
-        putClientInStream(dOut, this, false);
-
-        dOut.flush();
+        this.speed = 5;
+        this.acceleration = 0.2f;
+        this.normalDeceleration = 0.2f;
+        this.skidDeceleration = 0.3f;
     }
 
     @Override
@@ -411,5 +402,45 @@ public class Client implements Runnable {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    public float getHorizontalVelocity() {
+        return horizontalVelocity;
+    }
+
+    public void setHorizontalVelocity(float horizontalVelocity) {
+        this.horizontalVelocity = horizontalVelocity;
+    }
+
+    public float getVerticalVelocity() {
+        return verticalVelocity;
+    }
+
+    public void setVerticalVelocity(float verticalVelocity) {
+        this.verticalVelocity = verticalVelocity;
+    }
+
+    public float getAcceleration() {
+        return acceleration;
+    }
+
+    public void setAcceleration(float acceleration) {
+        this.acceleration = acceleration;
+    }
+
+    public float getNormalDeceleration() {
+        return normalDeceleration;
+    }
+
+    public void setNormalDeceleration(float normalDeceleration) {
+        this.normalDeceleration = normalDeceleration;
+    }
+
+    public float getSkidDeceleration() {
+        return skidDeceleration;
+    }
+
+    public void setSkidDeceleration(float skidDeceleration) {
+        this.skidDeceleration = skidDeceleration;
     }
 }

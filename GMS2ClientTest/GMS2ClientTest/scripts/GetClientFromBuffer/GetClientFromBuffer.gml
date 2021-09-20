@@ -60,6 +60,9 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 
 	var clientHealth = GetIntFromBuffer(buffer);
 	var clientSpeed = GetIntFromBuffer(buffer);
+	var acceleration = GetFloatFromBuffer(buffer);
+	var normalDeceleration = GetFloatFromBuffer(buffer);
+	var skidDeceleration = GetFloatFromBuffer(buffer);
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
 	var _rotation = GetFloatFromBuffer(buffer);
@@ -94,6 +97,10 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 		username = clientUsername;
 		serverHandler = server;
 		image_angle = _rotation;
+		acc = acceleration;
+		nd = normalDeceleration;
+		sd = skidDeceleration;
+		
 		ready = setReady;
 	}
 	return newClient;

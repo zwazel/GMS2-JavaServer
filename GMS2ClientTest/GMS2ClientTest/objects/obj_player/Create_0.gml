@@ -12,9 +12,9 @@ lastSendDirectionX = 0;
 lastSendDirectionY = 0;
 vx = 0; // horizontal velocity
 vy = 0; // vertical
-acc = 0.2; // acceleration
-nd = 0.2; // normal deacceleration
-sd = 0.3; // skid deacceleration
+acc = 0; // acceleration
+nd = 0; // normal deceleration
+sd = 0; // skid deceleration
 
 function setMyDirection(xDir, yDir, posX, posY) {
 	x = posX;
