@@ -9,6 +9,16 @@ public class Position {
         this.y = y;
     }
 
+    public boolean isSamePosition(Position position) {
+        if(position == null) return false;
+        if (this.x == position.getX() && this.y == position.getY()) {
+            return true;
+        }
+        System.out.println("this = " + this);
+        System.out.println("position = " + position);
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Position{" +

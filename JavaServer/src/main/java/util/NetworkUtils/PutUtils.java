@@ -49,6 +49,7 @@ public class PutUtils {
                 dOut.writeFloat(c.getSkidDeceleration());
             } else {
                 dOut.writeInt(c.getPing());
+                putPositionInStream(dOut, c.getPositionBefore());
             }
             putPositionInStream(dOut, c.getPosition()); // Position
             putDirectionInStream(dOut, c.getDirection()); // Direction

@@ -3,7 +3,9 @@
 // Inherit the parent event
 event_inherited();
 
+lastTargetX = 0;
+lastTargetY = 0;
 targetX = x;
 targetY = y;
 lerpSpeedStopOffset = 1;
-newCoords = false;
+reachedLastTarget = false;

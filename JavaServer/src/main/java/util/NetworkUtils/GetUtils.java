@@ -9,6 +9,10 @@ public class GetUtils {
     public static Position getPositionFromBuffer(ByteBuffer buffer) {
         double x = buffer.getDouble();
         double y = buffer.getDouble();
+
+        x = (double) Math.round(x*100)/100;
+        y = (double) Math.round(y*100)/100;
+
         return new Position(x, y);
     }
 

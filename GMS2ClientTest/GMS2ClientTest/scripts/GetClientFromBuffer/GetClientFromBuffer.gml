@@ -11,6 +11,7 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 
 	var clientHealth = GetIntFromBuffer(buffer);
 	var clientPing = GetIntFromBuffer(buffer);
+	var positionBefore = GetPositionFromBuffer(buffer);
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
 	var _rotation = GetFloatFromBuffer(buffer);
@@ -32,15 +33,18 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 
 	with(clientToUpdate) {
 		myId = clientID;
+		lastTargetX = positionBefore[0];
+		lastTargetY = positionBefore[1];
+		reachedLastTarget = false;
 		targetX = position[0];
 		targetY = position[1];
-		lastSendDirectionX = _direction[0]
-		lastSendDirectionY = _direction[1]
-		newCoords = true;
+		lastSendDirectionX = _direction[0];
+		lastSendDirectionY = _direction[1];
 		hp = clientHealth;
 		if(withUsername) {
 			username = clientUsername;
 		}
+		
 		serverHandler = server;
 		ping = clientPing;
 		image_angle = _rotation;

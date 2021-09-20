@@ -1,31 +1,29 @@
 /// @description
-if(newCoords) {
-	if(x != targetX || y != targetY) {
+if(reachedLastTarget) {
+	calculateMovement(lastSendDirectionX, lastSendDirectionY);
+} else {
+	if(x != lastTargetX || y != lastTargetY) {
 		var dt = delta_time / 1000000;
-		var distToTarget = point_distance(x,y, targetX, targetY);
-		var lerpSpeed = mySpeed * (distToTarget / 10) * dt;
+		var distToTarget = point_distance(x,y, lastTargetX, lastTargetY);
+		var lerpSpeed = mySpeed * (distToTarget) * dt;
 		lerpSpeed = clamp(lerpSpeed, 0, 1);
 		#region LERP TO TARGET POS
-		if(x != targetX) {
-			x = lerp(x, targetX, lerpSpeed);
+		if(x != lastTargetX) {
+			x = lerp(x, lastTargetX, lerpSpeed);
 		}
-		if(y != targetY) {
-			y = lerp(y, targetY, lerpSpeed);
+		if(y != lastTargetY) {
+			y = lerp(y, lastTargetY, lerpSpeed);
 		}
 		#endregion
 		#region SNAP TO TARGET POS
-		if(x >= targetX - lerpSpeedStopOffset && x <= targetX + lerpSpeedStopOffset) {
-			x = targetX;
+		if(x >= lastTargetX - lerpSpeedStopOffset && x <= lastTargetX + lerpSpeedStopOffset) {
+			x = lastTargetX;
 		}
-		if(y >= targetY - lerpSpeedStopOffset && y <= targetY + lerpSpeedStopOffset) {
-			y = targetY;
+		if(y >= lastTargetY - lerpSpeedStopOffset && y <= lastTargetY + lerpSpeedStopOffset) {
+			y = lastTargetY;
 		}
 		#endregion
 	} else {
-		newCoords = false;
+		reachedLastTarget = true;
 	}
-} else {
-	// Keep moving in the direction to "guess" where the player goes to (if for example we lost connection or something)
-	x += lastSendDirectionX * mySpeed;
-	y += lastSendDirectionY * mySpeed;
 }

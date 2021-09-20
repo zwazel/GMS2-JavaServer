@@ -20,8 +20,9 @@ public class Client implements Runnable {
     private boolean connected = true;
     private Server server;
     private int myId;
-    private String username;
+    private String username = null;
     private Position position;
+    private Position positionBefore;
     private int speed;
     private int health;
     private Direction direction = new Direction();
@@ -108,7 +109,16 @@ public class Client implements Runnable {
                         case get_move_direction:
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
+                            boolean updatedPos = false;
+                            if (!this.position.isSamePosition(positionBefore)) {
+                                this.setPositionBefore(this.position);
+                                updatedPos = true;
+                            }
                             this.setPosition(getPositionFromBuffer(bufferWithActualStuff));
+                            if (updatedPos) {
+                                System.out.println("pos of client " + this.username + ": " + position.getX() + "/" + position.getY());
+                                System.out.println("last pos of client " + this.username + ": " + positionBefore.getX() + "/" + positionBefore.getY());
+                            }
 
                             this.setRotation(bufferWithActualStuff.getFloat());
                             break;
@@ -442,5 +452,13 @@ public class Client implements Runnable {
 
     public void setSkidDeceleration(float skidDeceleration) {
         this.skidDeceleration = skidDeceleration;
+    }
+
+    public Position getPositionBefore() {
+        return positionBefore;
+    }
+
+    public void setPositionBefore(Position positionBefore) {
+        this.positionBefore = positionBefore;
     }
 }
