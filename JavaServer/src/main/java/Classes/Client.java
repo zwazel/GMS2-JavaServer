@@ -110,17 +110,11 @@ public class Client implements Runnable {
                         case get_move_direction:
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
-                            boolean updatedPos = false;
                             Position tempPos = getPositionFromBuffer(bufferWithActualStuff);
                             if (!this.position.isSamePosition(tempPos)) {
                                 this.setPositionBefore(this.position);
-                                updatedPos = true;
                             }
                             this.setPosition(tempPos);
-                            if (updatedPos) {
-                                System.out.println("pos of client " + this.username + ": " + position.getX() + "/" + position.getY());
-                                System.out.println("last pos of client " + this.username + ": " + positionBefore.getX() + "/" + positionBefore.getY());
-                            }
 
                             this.setRotation(bufferWithActualStuff.getFloat());
                             break;
