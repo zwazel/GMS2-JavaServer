@@ -25,7 +25,7 @@ public class Client implements Runnable {
     private Position positionBefore;
     private int speed;
     private int health;
-    private Direction direction = new Direction();
+    private Direction direction;
     private long sentPackages = 0;
     private long receivedPackages = 0;
     private int pingTime = -1;
@@ -43,6 +43,7 @@ public class Client implements Runnable {
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
         this.position = position;
+        this.positionBefore = position;
         this.direction = new Direction((byte) 0, (byte) 0);
         this.server = server;
         this.channel = channel;
@@ -110,11 +111,12 @@ public class Client implements Runnable {
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
                             boolean updatedPos = false;
-                            if (!this.position.isSamePosition(positionBefore)) {
+                            Position tempPos = getPositionFromBuffer(bufferWithActualStuff);
+                            if (!this.position.isSamePosition(tempPos)) {
                                 this.setPositionBefore(this.position);
                                 updatedPos = true;
                             }
-                            this.setPosition(getPositionFromBuffer(bufferWithActualStuff));
+                            this.setPosition(tempPos);
                             if (updatedPos) {
                                 System.out.println("pos of client " + this.username + ": " + position.getX() + "/" + position.getY());
                                 System.out.println("last pos of client " + this.username + ": " + positionBefore.getX() + "/" + positionBefore.getY());
