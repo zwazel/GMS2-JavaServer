@@ -14,6 +14,10 @@ public class Direction {
         this.vertical = vertical;
     }
 
+    public boolean isZero() {
+        return (this.horizontal == 0 && this.vertical == 0);
+    }
+
     public byte getHorizontal() {
         return horizontal;
     }

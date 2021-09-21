@@ -111,7 +111,7 @@ public class Client implements Runnable {
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
                             Position tempPos = getPositionFromBuffer(bufferWithActualStuff);
-                            if (!this.position.isSamePosition(tempPos)) {
+                            if (this.direction.isZero() || !this.position.isSamePosition(tempPos)) {
                                 this.setPositionBefore(this.position);
                             }
                             this.setPosition(tempPos);
