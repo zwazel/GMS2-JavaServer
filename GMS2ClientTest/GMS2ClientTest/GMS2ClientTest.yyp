@@ -4,6 +4,7 @@
     {"id":{"name":"obj_TextInputBox","path":"objects/obj_TextInputBox/obj_TextInputBox.yy",},"order":1,},
     {"id":{"name":"GetClientFromBuffer","path":"scripts/GetClientFromBuffer/GetClientFromBuffer.yy",},"order":0,},
     {"id":{"name":"ButtonCommands","path":"scripts/ButtonCommands/ButtonCommands.yy",},"order":0,},
+    {"id":{"name":"LerpToTargetPos","path":"scripts/LerpToTargetPos/LerpToTargetPos.yy",},"order":0,},
     {"id":{"name":"PutDirectionInBuffer","path":"scripts/PutDirectionInBuffer/PutDirectionInBuffer.yy",},"order":2,},
     {"id":{"name":"obj_player_client","path":"objects/obj_player_client/obj_player_client.yy",},"order":6,},
     {"id":{"name":"GetFloatFromBuffer","path":"scripts/GetFloatFromBuffer/GetFloatFromBuffer.yy",},"order":1,},
@@ -64,6 +65,7 @@
     {"folderPath":"folders/Scripts/Networking/Get/Values.yy","order":6,"resourceVersion":"1.0","name":"Values","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/Networking/Get/Objects.yy","order":7,"resourceVersion":"1.0","name":"Objects","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Scripts/Networking/Put.yy","order":7,"resourceVersion":"1.0","name":"Put","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Scripts/Archive.yy","order":4,"resourceVersion":"1.0","name":"Archive","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},

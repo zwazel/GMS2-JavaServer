@@ -44,10 +44,10 @@ public class Client implements Runnable {
         this.myId = id;
         this.position = position;
         this.positionBefore = position;
-        this.direction = new Direction((byte) 0, (byte) 0);
         this.server = server;
         this.channel = channel;
 
+        this.direction = new Direction((byte) 0, (byte) 0);
         this.health = 100;
         this.speed = 5;
         this.acceleration = 0.2f;
