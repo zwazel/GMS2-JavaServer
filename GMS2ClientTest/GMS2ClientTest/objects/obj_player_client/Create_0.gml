@@ -7,5 +7,5 @@ lastTargetX = 0;
 lastTargetY = 0;
 targetX = x;
 targetY = y;
-lerpSpeedStopOffset = 2;
+lerpSpeedStopOffset = 3;
 reachedLastTarget = false;

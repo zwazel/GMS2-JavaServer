@@ -9,7 +9,7 @@ clients = ds_list_create();
 mePlayer = noone;
 sentPackages = 0;
 receivedPackages = 0;
-packageSenderTimerTime = room_speed / 6;
+packageSenderTimerTime = room_speed / 24;
 myBuffer = buffer_create(16,buffer_grow,1);
 
 with(inputManager) {
