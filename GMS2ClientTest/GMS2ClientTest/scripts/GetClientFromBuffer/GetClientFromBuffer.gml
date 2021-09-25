@@ -2,10 +2,8 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	var clientID = GetIntFromBuffer(buffer);
 	var withUsername = buffer_read(buffer, buffer_bool);
 	var clientUsername = "undefined";
-	show_debug_message("withUsername = " + string(withUsername));
 	if(withUsername) {
 		var usernameLength = GetIntFromBuffer(buffer);
-		show_debug_message("usernameLength = " + string(usernameLength));
 		clientUsername = GetStringFromBuffer(buffer, usernameLength);
 	}
 
@@ -20,16 +18,6 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	
 	var clientToUpdate = noone;
 	
-	show_debug_message("client id = " + string(clientID));
-	show_debug_message("client username = " + string(clientUsername));
-	show_debug_message("client health = " + string(clientHealth));
-	show_debug_message("client ping = " + string(clientPing));
-	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
-	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
-	show_debug_message("client rotation = {" + string(_rotation) + "}");
-	show_debug_message("client mainState = {" + string(_mainState) + "}");
-	show_debug_message("client subState = {" + string(_subState) + "}");
-	
 	var updatingHost = false;
 	if(clientID == mePlayer.myId) {
 		clientToUpdate = mePlayer;
@@ -39,6 +27,18 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	}
 
 	show_debug_message("CLIENT TO UPDATE = " + string(clientToUpdate));
+	
+	show_debug_message("client id = " + string(clientID));
+	show_debug_message("client username = " + string(clientUsername));
+	show_debug_message("client health = " + string(clientHealth));
+	show_debug_message("client ping = " + string(clientPing));
+	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
+	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
+	show_debug_message("client rotation = {" + string(_rotation) + "}");
+	show_debug_message("client mainState = {" + string(_mainState) + "}");
+	if(_subState == PLAYER_SUB_STATES.SHOOTING) {
+		show_debug_message("client subState = {" + string(_subState) + "}");
+	}
 
 	with(clientToUpdate) {
 		myId = clientID;

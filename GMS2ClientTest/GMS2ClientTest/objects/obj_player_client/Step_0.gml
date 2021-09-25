@@ -1,4 +1,6 @@
 /// @description
+event_inherited();
+
 if(!reachedLastTarget) {
 	if(x==targetX && y==targetY) {
 		reachedLastTarget = true;
