@@ -27,6 +27,7 @@ public class Client implements Runnable {
     private Position positionBefore;
     private int speed;
     private int sprintSpeed;
+    private int shootingCooldown;
     private int health;
     private Direction direction;
     private long sentPackages = 0;
@@ -56,6 +57,7 @@ public class Client implements Runnable {
         this.health = 100;
         this.speed = 5;
         this.sprintSpeed = 8;
+        this.shootingCooldown = 10;
         this.acceleration = 0.2f;
         this.normalDeceleration = 0.2f;
         this.skidDeceleration = 0.3f;
@@ -487,5 +489,13 @@ public class Client implements Runnable {
 
     public void setSprintSpeed(int sprintSpeed) {
         this.sprintSpeed = sprintSpeed;
+    }
+
+    public int getShootingCooldown() {
+        return shootingCooldown;
+    }
+
+    public void setShootingCooldown(int shootingCooldown) {
+        this.shootingCooldown = shootingCooldown;
     }
 }

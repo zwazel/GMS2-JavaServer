@@ -45,6 +45,7 @@ public class PutUtils {
             if (init) {
                 dOut.writeInt(c.getSpeed());
                 dOut.writeInt(c.getSprintSpeed());
+                dOut.writeInt(c.getShootingCooldown());
                 dOut.writeFloat(c.getAcceleration());
                 dOut.writeFloat(c.getNormalDeceleration());
                 dOut.writeFloat(c.getSkidDeceleration());

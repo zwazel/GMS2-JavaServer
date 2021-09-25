@@ -7,24 +7,20 @@ ping = 0;
 ready = false;
 mainState = PLAYER_MAIN_STATES.IDLE;
 subState = PLAYER_SUB_STATES.NOTHING;
+ownedBullets = 0;
 
 #region MOVEMENT
 lastSendDirectionX = 0;
 lastSendDirectionY = 0;
 mySpeed = -1;
 mySprintSpeed = -1;
+shootingCooldown = -1;
+canShoot = true;
 vx = 0; // horizontal velocity
 vy = 0; // vertical
 acc = 0; // acceleration
 nd = 0; // normal deceleration
 sd = 0; // skid deceleration
-
-function setMyDirection(xDir, yDir, posX, posY) {
-	x = posX;
-	y = posY;
-	lastSendDirectionX = xDir;
-	lastSendDirectionY = yDir;
-}
 
 function calculateMovement(h,v) {
 	var isSprinting = (mainState == PLAYER_MAIN_STATES.RUNNING);

@@ -78,6 +78,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 	var clientHealth = GetIntFromBuffer(buffer);
 	var clientSpeed = GetIntFromBuffer(buffer);
 	var clientSprintSpeed = GetIntFromBuffer(buffer);
+	var clientShootCooldown = GetIntFromBuffer(buffer);
 	var acceleration = GetFloatFromBuffer(buffer);
 	var normalDeceleration = GetFloatFromBuffer(buffer);
 	var skidDeceleration = GetFloatFromBuffer(buffer);
@@ -112,6 +113,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 		lastSendDirectionY = _direction[1]
 		mySpeed = clientSpeed;
 		mySprintSpeed = clientSprintSpeed;
+		shootingCooldown = clientShootCooldown;
 		hp = clientHealth;
 		username = clientUsername;
 		serverHandler = server;
