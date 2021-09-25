@@ -1,6 +1,8 @@
 package Classes;
 
 import GlobalStuff.NetworkCommands;
+import GlobalStuff.states.playerStates.MainStates;
+import GlobalStuff.states.playerStates.SubStates;
 import util.Direction;
 import util.Position;
 
@@ -39,6 +41,8 @@ public class Client implements Runnable {
     private float acceleration;
     private float normalDeceleration;
     private float skidDeceleration;
+    private MainStates mainState = MainStates.IDLE;
+    private SubStates subState = SubStates.NOTHING;
 
     public Client(int id, Position position, Server server, SocketChannel channel) {
         this.myId = id;
@@ -456,5 +460,21 @@ public class Client implements Runnable {
 
     public void setPositionBefore(Position positionBefore) {
         this.positionBefore = positionBefore;
+    }
+
+    public MainStates getMainState() {
+        return mainState;
+    }
+
+    public void setMainState(MainStates mainState) {
+        this.mainState = mainState;
+    }
+
+    public SubStates getSubState() {
+        return subState;
+    }
+
+    public void setSubState(SubStates subState) {
+        this.subState = subState;
     }
 }
