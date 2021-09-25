@@ -44,6 +44,7 @@ public class PutUtils {
             dOut.writeInt(c.getHealth()); // Health
             if (init) {
                 dOut.writeInt(c.getSpeed());
+                dOut.writeInt(c.getSprintSpeed());
                 dOut.writeFloat(c.getAcceleration());
                 dOut.writeFloat(c.getNormalDeceleration());
                 dOut.writeFloat(c.getSkidDeceleration());
@@ -54,6 +55,8 @@ public class PutUtils {
             putPositionInStream(dOut, c.getPosition()); // Position
             putDirectionInStream(dOut, c.getDirection()); // Direction
             dOut.writeFloat(c.getRotation());
+            dOut.write(c.getMainState().ordinal());
+            dOut.write(c.getSubState().ordinal());
         } catch (IOException e) {
             e.printStackTrace();
         }

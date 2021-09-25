@@ -15,6 +15,9 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
 	var _rotation = GetFloatFromBuffer(buffer);
+	var _mainState = buffer_read(buffer, buffer_u8);
+	var _subState = buffer_read(buffer, buffer_u8);
+	
 	var clientToUpdate = noone;
 	
 	show_debug_message("client id = " + string(clientID));
@@ -24,20 +27,31 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 	show_debug_message("client position = {" + string(position[0]) + "," + string(position[1]) + "}");
 	show_debug_message("client direction = {" + string(_direction[0]) + "," + string(_direction[1]) + "}");
 	show_debug_message("client rotation = {" + string(_rotation) + "}");
+	show_debug_message("client mainState = {" + string(_mainState) + "}");
+	show_debug_message("client subState = {" + string(_subState) + "}");
 	
+	var updatingHost = false;
 	if(clientID == mePlayer.myId) {
 		clientToUpdate = mePlayer;
+		updatingHost = true;
 	} else {
 		clientToUpdate = GetClientFromDsList(clients, clientID);
 	}
 
+	show_debug_message("CLIENT TO UPDATE = " + string(clientToUpdate));
+
 	with(clientToUpdate) {
 		myId = clientID;
-		lastTargetX = positionBefore[0];
-		lastTargetY = positionBefore[1];
-		reachedLastTarget = false;
-		targetX = position[0];
-		targetY = position[1];
+		if(!updatingHost) {
+			lastTargetX = positionBefore[0];
+			lastTargetY = positionBefore[1];
+			reachedLastTarget = false;
+			targetX = position[0];
+			targetY = position[1];
+			mainState = _mainState;
+			subState = _subState;
+			image_angle = _rotation;
+		}
 		lastSendDirectionX = _direction[0];
 		lastSendDirectionY = _direction[1];
 		hp = clientHealth;
@@ -47,7 +61,6 @@ function UpdateClientFromBuffer(buffer, server, clients, mePlayer) {
 		
 		serverHandler = server;
 		ping = clientPing;
-		image_angle = _rotation;
 	}
 }
 
@@ -64,6 +77,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 
 	var clientHealth = GetIntFromBuffer(buffer);
 	var clientSpeed = GetIntFromBuffer(buffer);
+	var clientSprintSpeed = GetIntFromBuffer(buffer);
 	var acceleration = GetFloatFromBuffer(buffer);
 	var normalDeceleration = GetFloatFromBuffer(buffer);
 	var skidDeceleration = GetFloatFromBuffer(buffer);
@@ -97,6 +111,7 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 		lastSendDirectionX = _direction[0]
 		lastSendDirectionY = _direction[1]
 		mySpeed = clientSpeed;
+		mySprintSpeed = clientSprintSpeed;
 		hp = clientHealth;
 		username = clientUsername;
 		serverHandler = server;

@@ -10,6 +10,7 @@ public class GetUtils {
         double x = buffer.getDouble();
         double y = buffer.getDouble();
 
+        // round it to 2 decimal places
         x = Math.round(x*100.0)/100.0;
         y = Math.round(y*100.0)/100.0;
 

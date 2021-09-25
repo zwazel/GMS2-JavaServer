@@ -1,0 +1,4 @@
+enum PLAYER_SUB_STATES {
+	NOTHING,
+	SHOOTING,
+}

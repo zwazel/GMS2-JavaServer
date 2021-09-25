@@ -11,4 +11,5 @@ enum networkCommands {
 	update_clients,
 	receive_ping_other,
 	end_of_packet,
+	update_client_serverSide,
 }

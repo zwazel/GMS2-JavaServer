@@ -26,6 +26,7 @@ public class Client implements Runnable {
     private Position position;
     private Position positionBefore;
     private int speed;
+    private int sprintSpeed;
     private int health;
     private Direction direction;
     private long sentPackages = 0;
@@ -54,6 +55,7 @@ public class Client implements Runnable {
         this.direction = new Direction((byte) 0, (byte) 0);
         this.health = 100;
         this.speed = 5;
+        this.sprintSpeed = 8;
         this.acceleration = 0.2f;
         this.normalDeceleration = 0.2f;
         this.skidDeceleration = 0.3f;
@@ -111,7 +113,7 @@ public class Client implements Runnable {
                             }
                             break;
 
-                        case get_move_direction:
+                        case update_client_serverSide:
                             this.setDirection(getDirectionFromBuffer(bufferWithActualStuff));
 
                             Position tempPos = getPositionFromBuffer(bufferWithActualStuff);
@@ -121,6 +123,9 @@ public class Client implements Runnable {
                             this.setPosition(tempPos);
 
                             this.setRotation(bufferWithActualStuff.getFloat());
+
+                            this.setMainState(MainStates.getValues()[bufferWithActualStuff.get()]);
+                            this.setSubState(SubStates.getValues()[bufferWithActualStuff.get()]);
                             break;
                         default:
                             break loopThroughBuffer;
@@ -156,24 +161,22 @@ public class Client implements Runnable {
         dOut.write(NetworkCommands.send_ping.ordinal());
         dOut.writeInt(this.pingTime);
 
-        if (this.server.getClients().size() > 1) {
-            ArrayList<Client> clientsToUpdate = new ArrayList<>();
-            for (Client client : this.server.getClients()) {
-                if (!client.isReady() || this.myId == client.getMyId() || newClients.contains(client) || clientsDisconnected.contains(client)) {
-                    continue;
-                }
-
-                clientsToUpdate.add(client);
+        ArrayList<Client> clientsToUpdate = new ArrayList<>();
+        for (Client client : this.server.getClients()) {
+            if (!client.isReady() || newClients.contains(client) || clientsDisconnected.contains(client)) {
+                continue;
             }
 
-            if (clientsToUpdate.size() > 0) {
-                dOut.write(NetworkCommands.update_clients.ordinal());
-                dOut.writeInt(clientsToUpdate.size());
+            clientsToUpdate.add(client);
+        }
+
+        if (clientsToUpdate.size() > 0) {
+            dOut.write(NetworkCommands.update_clients_clientSide.ordinal());
+            dOut.writeInt(clientsToUpdate.size());
 //                System.out.println("clientsToUpdate.size() = " + clientsToUpdate.size());
-                for (Client client : clientsToUpdate) {
+            for (Client client : clientsToUpdate) {
 //                    System.out.println("put client " + client.username + " as update in " + this.username);
-                    putClientInStream(dOut, client, false);
-                }
+                putClientInStream(dOut, client, false);
             }
         }
 
@@ -476,5 +479,13 @@ public class Client implements Runnable {
 
     public void setSubState(SubStates subState) {
         this.subState = subState;
+    }
+
+    public int getSprintSpeed() {
+        return sprintSpeed;
+    }
+
+    public void setSprintSpeed(int sprintSpeed) {
+        this.sprintSpeed = sprintSpeed;
     }
 }

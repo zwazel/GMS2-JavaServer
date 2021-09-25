@@ -10,9 +10,10 @@ public enum NetworkCommands {
     update_username,
     send_all_clients,
     get_move_direction,
-    update_clients,
+    update_clients_clientSide,
     send_ping_other,
-    end_of_packet;
+    end_of_packet,
+    update_client_serverSide;
 
     private static final NetworkCommands[] values = values();
 

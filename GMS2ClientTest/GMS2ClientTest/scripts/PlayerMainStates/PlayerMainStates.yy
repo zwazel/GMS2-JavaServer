@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Enums",
-    "path": "folders/Scripts/Enums.yy",
+    "name": "playerStates",
+    "path": "folders/Scripts/Enums/states/playerStates.yy",
   },
   "resourceVersion": "1.0",
-  "name": "PlayerBehaviour",
+  "name": "PlayerMainStates",
   "tags": [],
   "resourceType": "GMScript",
 }

@@ -1,0 +1,5 @@
+enum PLAYER_MAIN_STATES {
+	IDLE,
+	WALKING,
+	RUNNING,
+}

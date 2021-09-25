@@ -2,14 +2,17 @@
 myId = -1;
 username = "undefined";
 hp = -1;
-mySpeed = -1;
 serverHandler = noone;
 ping = 0;
 ready = false;
+mainState = PLAYER_MAIN_STATES.IDLE;
+subState = PLAYER_SUB_STATES.NOTHING;
 
 #region MOVEMENT
 lastSendDirectionX = 0;
 lastSendDirectionY = 0;
+mySpeed = -1;
+mySprintSpeed = -1;
 vx = 0; // horizontal velocity
 vy = 0; // vertical
 acc = 0; // acceleration
@@ -24,6 +27,12 @@ function setMyDirection(xDir, yDir, posX, posY) {
 }
 
 function calculateMovement(h,v) {
+	var isSprinting = (mainState == PLAYER_MAIN_STATES.RUNNING);
+	calculateMovementWithDefiningSprinting(h,v,isSprinting);
+}
+
+function calculateMovementWithDefiningSprinting(h,v,isSprinting) {
+	var maxSpeed = (isSprinting) ? mySprintSpeed : mySpeed;
 	var spd = sqrt(vx * vx + vy * vy);
 	if (h == 0 && v == 0) {
 		// deaccelerate when not moving
@@ -49,9 +58,9 @@ function calculateMovement(h,v) {
 			vx += h * acc;
 			vy += v * acc;
 			spd = sqrt(vx * vx + vy * vy);
-			if (spd > mySpeed) {
-			    vx = vx / spd * mySpeed;
-			    vy = vy / spd * mySpeed;
+			if (spd > maxSpeed) {
+			    vx = vx / spd * maxSpeed;
+			    vy = vy / spd * maxSpeed;
 			}
 		}
 	}

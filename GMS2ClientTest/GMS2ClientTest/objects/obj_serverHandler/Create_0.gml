@@ -25,16 +25,18 @@ with(currentButton) {
 	ready = true;
 }
 
-function sendMoveCommand(dirX, dirY, posX, posY) {
-	buffer_write(myBuffer, buffer_s8, networkCommands.send_move_direction);
-	PutDirectionInBuffer(myBuffer, dirX, dirY);
-	PutPositionInBuffer(myBuffer, posX, posY);
+function updatePlayerOnServer() {
+	buffer_write(myBuffer, buffer_s8, networkCommands.update_client_serverSide);
+	PutDirectionInBuffer(myBuffer, mePlayer.lastSendDirectionX, mePlayer.lastSendDirectionY);
+	PutPositionInBuffer(myBuffer, mePlayer.x, mePlayer.y);
 	buffer_write(myBuffer, buffer_f32, mePlayer.image_angle);
+	buffer_write(myBuffer, buffer_s8, mePlayer.mainState);
+	buffer_write(myBuffer, buffer_s8, mePlayer.subState);
 }
 
-function sendFinalPing(ping) {	
+function sendFinalPing() {	
 	buffer_write(myBuffer, buffer_s8, networkCommands.receive_ping_other);
-	buffer_write(myBuffer, buffer_s32, ping);
+	buffer_write(myBuffer, buffer_s32, mePlayer.ping);
 }
 
 function buttonPressed(button) {
