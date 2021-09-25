@@ -35,7 +35,7 @@ if(ready) {
 			alarm[0] = room_speed / shootingCooldown;
 		}
 	} else {
-		subState = subState = PLAYER_SUB_STATES.NOTHING;
+		subState = PLAYER_SUB_STATES.NOTHING;
 	}
 	#endregion
 }

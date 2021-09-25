@@ -85,6 +85,9 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 	var position = GetPositionFromBuffer(buffer);
 	var _direction = GetDirectionFromBuffer(buffer);
 	var _rotation = GetFloatFromBuffer(buffer);
+	var _mainState = buffer_read(buffer, buffer_u8);
+	var _subState = buffer_read(buffer, buffer_u8);
+	
 	var newClient = noone;
 	
 	show_debug_message("client id = " + string(clientID));
@@ -121,6 +124,8 @@ function InitClientFromBuffer(buffer, server, setReady = true, playerType = Play
 		acc = acceleration;
 		nd = normalDeceleration;
 		sd = skidDeceleration;
+		mainState = _mainState;
+		subState = _subState;
 		
 		ready = setReady;
 	}
