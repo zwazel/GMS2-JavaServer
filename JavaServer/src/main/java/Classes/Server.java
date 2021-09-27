@@ -1,5 +1,6 @@
 package Classes;
 
+import Classes.Network.NetworkTracker;
 import util.NetworkUtils.sender.InitClient;
 import util.Position;
 
@@ -10,16 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private List<Client> clients;
+    private List<Client> clientsUnready;
+    private List<Client> clientsReady;
     private ServerSocketChannel socket;
     private boolean running;
     private Position startPosition;
     private int idCounter = 0;
     private long sentPackages = 0;
     private long receivedPackages = 0;
+    private NetworkTracker networkTracker;
 
     public Server(int port) {
-        this.clients = new ArrayList<>();
+        this.clientsUnready = new ArrayList<>();
+        this.clientsReady = new ArrayList<>();
         this.running = false;
         this.startPosition = new Position(100, 100);
 
@@ -39,6 +43,10 @@ public class Server {
             running = false;
         }
 
+        networkTracker = new NetworkTracker(this);
+        Thread t = new Thread(networkTracker);
+        t.start();
+
         while (running) {
             try {
                 // Check for new connections
@@ -49,36 +57,37 @@ public class Server {
                 if (newChannel != null) {
                     System.out.println("New Connection " + newChannel.socket().getInetAddress().toString());
                     Client c = new Client(idCounter++, startPosition, this, newChannel);
-                    if (this.clients.size() > 0) {
-                        c.addNewClients(clients);
+                    if (this.clientsUnready.size() > 0) {
+                        c.addNewClients(clientsUnready);
                     }
-                    Thread t = new Thread(c);
+                    t = new Thread(c);
                     t.start();
 
                     InitClient initClient = new InitClient(c);
                     t = new Thread(initClient);
                     t.start();
 
-                    clients.add(c);
-                    System.out.println("NEW CLIENT! clients.size() = " + clients.size());
+                    clientsUnready.add(c);
+                    System.out.println("NEW CLIENT! clients.size() = " + clientsUnready.size());
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
     public void printClientInfos() {
-        System.out.println("currently connected clients: " + this.clients.size());
-        for (Client c : this.clients) {
+        System.out.println("currently connected clients: " + this.clientsUnready.size());
+        for (Client c : this.clientsUnready) {
             System.out.println(c.getInfos());
         }
     }
 
     public void addNewClient(Client newClient) {
-        for (Client client : clients) {
+        this.clientsReady.add(newClient);
+        this.clientsUnready.remove(newClient);
+        for (Client client : clientsReady) {
             if (client.getMyId() == newClient.getMyId()) {
                 continue;
             }
@@ -88,22 +97,31 @@ public class Server {
     }
 
     public void removeClient(Client client) {
-        for (Client clientToInform : clients) {
+        for (Client clientToInform : clientsUnready) {
             if (client.getMyId() == clientToInform.getMyId()) {
                 continue;
             }
 
             clientToInform.addClientDisconnected(client);
         }
-        clients.remove(client);
+        clientsReady.remove(client);
+        clientsUnready.remove(client);
     }
 
-    public List<Client> getClients() {
-        return clients;
+    public List<Client> getClientsUnready() {
+        return clientsUnready;
     }
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
+    public void setClientsUnready(List<Client> clientsUnready) {
+        this.clientsUnready = clientsUnready;
+    }
+
+    public List<Client> getClientsReady() {
+        return clientsReady;
+    }
+
+    public void setClientsReady(List<Client> clientsReady) {
+        this.clientsReady = clientsReady;
     }
 
     public ServerSocketChannel getSocket() {

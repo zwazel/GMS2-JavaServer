@@ -14,7 +14,7 @@ public enum NetworkCommands {
     send_ping_other,
     end_of_packet,
     update_client_serverSide,
-    shoot;
+    place_bullet;
 
     private static final NetworkCommands[] values = values();
 

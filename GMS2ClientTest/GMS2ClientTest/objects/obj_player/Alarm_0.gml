@@ -1,2 +1,0 @@
-/// @description shooting
-canShoot = true;

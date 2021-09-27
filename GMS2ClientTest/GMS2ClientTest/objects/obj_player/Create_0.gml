@@ -15,7 +15,6 @@ lastSendDirectionY = 0;
 mySpeed = -1;
 mySprintSpeed = -1;
 shootingCooldown = -1;
-canShoot = true;
 vx = 0; // horizontal velocity
 vy = 0; // vertical
 acc = 0; // acceleration
@@ -65,3 +64,12 @@ function calculateMovementWithDefiningSprinting(h,v,isSprinting) {
 	y += vy;
 }
 #endregion
+
+function shoot(_direction) {
+	var bullet = instance_create_layer(x,y,"instances",obj_bullet);
+	ownedBullets++;
+	with(bullet) {
+		owner = other.id;
+		direction = _direction;
+	}
+}
