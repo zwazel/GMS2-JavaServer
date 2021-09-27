@@ -13,7 +13,8 @@ public enum NetworkCommands {
     update_clients_clientSide,
     send_ping_other,
     end_of_packet,
-    update_client_serverSide;
+    update_client_serverSide,
+    shoot;
 
     private static final NetworkCommands[] values = values();
 

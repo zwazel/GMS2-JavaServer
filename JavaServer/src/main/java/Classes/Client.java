@@ -4,6 +4,7 @@ import GlobalStuff.NetworkCommands;
 import GlobalStuff.states.playerStates.MainStates;
 import GlobalStuff.states.playerStates.SubStates;
 import util.Direction;
+import util.NetworkUtils.timer.ShootTimer;
 import util.Position;
 
 import java.io.DataOutputStream;
@@ -28,6 +29,7 @@ public class Client implements Runnable {
     private int speed;
     private int sprintSpeed;
     private int shootingCooldown;
+    private Thread shootTimerThread;
     private int health;
     private Direction direction;
     private long sentPackages = 0;
@@ -57,7 +59,7 @@ public class Client implements Runnable {
         this.health = 100;
         this.speed = 5;
         this.sprintSpeed = 8;
-        this.shootingCooldown = 10;
+        this.shootingCooldown = 2000;
         this.acceleration = 0.2f;
         this.normalDeceleration = 0.2f;
         this.skidDeceleration = 0.3f;
@@ -65,6 +67,7 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
+        int shootTimeCounter = 0;
         while (connected) {
             try {
                 final int bufferSize = 64;
@@ -126,8 +129,24 @@ public class Client implements Runnable {
 
                             this.setRotation(bufferWithActualStuff.getFloat());
 
+                            SubStates previousSubState = subState;
+
                             this.setMainState(MainStates.getValues()[bufferWithActualStuff.get()]);
                             this.setSubState(SubStates.getValues()[bufferWithActualStuff.get()]);
+
+                            if (previousSubState == SubStates.SHOOTING && subState != SubStates.SHOOTING) {
+                                if(shootTimerThread != null) {
+//                                    shootTimerThread.interrupt();
+                                }
+                            } else if (subState == SubStates.SHOOTING) {
+                                if (this.shootTimerThread == null) {
+                                    System.out.println("shootTimeCounter = " + shootTimeCounter++);
+                                    ShootTimer shootTimer = new ShootTimer(this);
+                                    shootTimerThread = new Thread(shootTimer);
+                                    shootTimerThread.start();
+                                }
+                            }
+
                             break;
                         default:
                             break loopThroughBuffer;
@@ -497,5 +516,13 @@ public class Client implements Runnable {
 
     public void setShootingCooldown(int shootingCooldown) {
         this.shootingCooldown = shootingCooldown;
+    }
+
+    public Thread getShootTimerThread() {
+        return shootTimerThread;
+    }
+
+    public void setShootTimerThread(Thread shootTimerThread) {
+        this.shootTimerThread = shootTimerThread;
     }
 }
