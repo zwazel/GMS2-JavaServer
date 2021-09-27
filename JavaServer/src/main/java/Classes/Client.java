@@ -129,16 +129,10 @@ public class Client implements Runnable {
 
                             this.setRotation(bufferWithActualStuff.getFloat());
 
-                            SubStates previousSubState = subState;
-
                             this.setMainState(MainStates.getValues()[bufferWithActualStuff.get()]);
                             this.setSubState(SubStates.getValues()[bufferWithActualStuff.get()]);
 
-                            if (previousSubState == SubStates.SHOOTING && subState != SubStates.SHOOTING) {
-                                if(shootTimerThread != null) {
-//                                    shootTimerThread.interrupt();
-                                }
-                            } else if (subState == SubStates.SHOOTING) {
+                            if (subState == SubStates.SHOOTING) {
                                 if (this.shootTimerThread == null) {
                                     System.out.println("shootTimeCounter = " + shootTimeCounter++);
                                     ShootTimer shootTimer = new ShootTimer(this);
